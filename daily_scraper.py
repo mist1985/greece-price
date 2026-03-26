@@ -21,7 +21,7 @@ DATA_FILE   = BASE_DIR / "tracker_data.js"
 LOG_FILE    = BASE_DIR / "scraper.log"
 
 def generate_urls(config: Dict[str, Any]) -> List[Dict]:
-    airbnb_base = "https://www.airbnb.com/s/{}/homes?checkin={}&checkout={}&adults={}&children={}&search_type=filter_change&currency=EUR"
+    airbnb_base = "https://www.airbnb.com/s/{}/homes?checkin={}&checkout={}&adults={}&children={}&search_type=filter_change&currency=EUR&display_currency=EUR&price_filter_input_type=0&display_total_price=true"
     booking_base = "https://www.booking.com/searchresults.html?ss={}&checkin={}&checkout={}&group_adults={}&group_children={}&no_rooms=1&selected_currency=EUR"
     
     locations = [
