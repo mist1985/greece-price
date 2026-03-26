@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greece Vacation Search Links</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .trip-info {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+
+        .trip-info h2 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .trip-detail {
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .instructions {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .instructions h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+            color: #856404;
+        }
+
+        .instructions li {
+            margin: 8px 0;
+        }
+
+        .location-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+        }
+
+        .location-card:hover {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transform: translateY(-3px);
+        }
+
+        .location-name {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .link-section {
+            margin: 15px 0;
+        }
+
+        .platform-label {
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .link-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-link {
+            flex: 1;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .search-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .search-link.airbnb {
+            background: linear-gradient(135deg, #ff5a5f 0%, #fc3d43 100%);
+        }
+
+        .search-link.booking {
+            background: linear-gradient(135deg, #003580 0%, #00224f 100%);
+        }
+
+        .copy-btn {
+            padding: 15px 20px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .next-step {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .next-step h3 {
+            color: #065f46;
+            margin-bottom: 10px;
+        }
+
+        .next-step p {
+            color: #047857;
+            margin-bottom: 15px;
+        }
+
+        .tracker-link {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #10b981;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+
+        .tracker-link:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .link-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏖️ Greece Vacation Search Links</h1>
+        <p class="subtitle">Click the links below to search for properties</p>
+
+        <div class="trip-info">
+            <h2>📅 Your Trip Details</h2>
+            <div class="trip-detail"><strong>Dates:</strong> 2026-06-25 to 2026-07-05</div>
+            <div class="trip-detail"><strong>Guests:</strong> 2 adults, 2 children</div>
+            <div class="trip-detail"><strong>Budget:</strong> €1500</div>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li><strong>Click each link below</strong> to open the search in a new tab</li>
+                <li><strong>Browse properties</strong> that fit your budget</li>
+                <li><strong>Found something interesting?</strong> Copy the URL and price</li>
+                <li><strong>Go to the tracker</strong> (link at bottom) and paste the details</li>
+                <li><strong>Repeat</strong> this process daily/weekly to track price changes!</li>
+            </ol>
+        </div>
+
+        <div class="location-card">
+            <div class="location-name">
+                📍 Vourvourou, Chalkidiki, Greece
+            </div>
+
+            <div class="link-section">
+                <div class="platform-label">🏠 Airbnb</div>
+                <div class="link-container">
+                    <a href="https://www.airbnb.com/s/Vourvourou%2C%20Chalkidiki%2C%20Greece/homes?checkin=2026-06-25&checkout=2026-07-05&adults=2&children=2&search_type=filter_change" target="_blank" class="search-link airbnb">
+                        Search on Airbnb →
+                    </a>
+                    <button class="copy-btn" onclick="copyToClipboard('https://www.airbnb.com/s/Vourvourou%2C%20Chalkidiki%2C%20Greece/homes?checkin=2026-06-25&checkout=2026-07-05&adults=2&children=2&search_type=filter_change')">
+                        📋 Copy URL
+                    </button>
+                </div>
+            </div>
+
+            <div class="link-section">
+                <div class="platform-label">🏨 Booking.com</div>
+                <div class="link-container">
+                    <a href="https://www.booking.com/searchresults.html?ss=Vourvourou&checkin=2026-06-25&checkout=2026-07-05&group_adults=2&group_children=2&no_rooms=1&nflt=ht_id%3D201" target="_blank" class="search-link booking">
+                        Search on Booking.com →
+                    </a>
+                    <button class="copy-btn" onclick="copyToClipboard('https://www.booking.com/searchresults.html?ss=Vourvourou&checkin=2026-06-25&checkout=2026-07-05&group_adults=2&group_children=2&no_rooms=1&nflt=ht_id%3D201')">
+                        📋 Copy URL
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="location-card">
+            <div class="location-name">
+                📍 Sithonia, Chalkidiki, Greece
+            </div>
+
+            <div class="link-section">
+                <div class="platform-label">🏠 Airbnb</div>
+                <div class="link-container">
+                    <a href="https://www.airbnb.com/s/Sithonia%2C%20Chalkidiki%2C%20Greece/homes?checkin=2026-06-25&checkout=2026-07-05&adults=2&children=2&search_type=filter_change" target="_blank" class="search-link airbnb">
+                        Search on Airbnb →
+                    </a>
+                    <button class="copy-btn" onclick="copyToClipboard('https://www.airbnb.com/s/Sithonia%2C%20Chalkidiki%2C%20Greece/homes?checkin=2026-06-25&checkout=2026-07-05&adults=2&children=2&search_type=filter_change')">
+                        📋 Copy URL
+                    </button>
+                </div>
+            </div>
+
+            <div class="link-section">
+                <div class="platform-label">🏨 Booking.com</div>
+                <div class="link-container">
+                    <a href="https://www.booking.com/searchresults.html?ss=Sithonia&checkin=2026-06-25&checkout=2026-07-05&group_adults=2&group_children=2&no_rooms=1&nflt=ht_id%3D201" target="_blank" class="search-link booking">
+                        Search on Booking.com →
+                    </a>
+                    <button class="copy-btn" onclick="copyToClipboard('https://www.booking.com/searchresults.html?ss=Sithonia&checkin=2026-06-25&checkout=2026-07-05&group_adults=2&group_children=2&no_rooms=1&nflt=ht_id%3D201')">
+                        📋 Copy URL
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="location-card">
+            <div class="location-name">
+                📍 Kassandra, Chalkidiki, Greece
+            </div>
+
+            <div class="link-section">
+                <div class="platform-label">🏠 Airbnb</div>
+                <div class="link-container">
+                    <a href="https://www.airbnb.com/s/Kassandra%2C%20Chalkidiki%2C%20Greece/homes?checkin=2026-06-25&checkout=2026-07-05&adults=2&children=2&search_type=filter_change" target="_blank" class="search-link airbnb">
+                        Search on Airbnb →
+                    </a>
+                    <button class="copy-btn" onclick="copyToClipboard('https://www.airbnb.com/s/Kassandra%2C%20Chalkidiki%2C%20Greece/homes?checkin=2026-06-25&checkout=2026-07-05&adults=2&children=2&search_type=filter_change')">
+                        📋 Copy URL
+                    </button>
+                </div>
+            </div>
+
+            <div class="link-section">
+                <div class="platform-label">🏨 Booking.com</div>
+                <div class="link-container">
+                    <a href="https://www.booking.com/searchresults.html?ss=Kassandra&checkin=2026-06-25&checkout=2026-07-05&group_adults=2&group_children=2&no_rooms=1&nflt=ht_id%3D201" target="_blank" class="search-link booking">
+                        Search on Booking.com →
+                    </a>
+                    <button class="copy-btn" onclick="copyToClipboard('https://www.booking.com/searchresults.html?ss=Kassandra&checkin=2026-06-25&checkout=2026-07-05&group_adults=2&group_children=2&no_rooms=1&nflt=ht_id%3D201')">
+                        📋 Copy URL
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="location-card">
+            <div class="location-name">
+                📍 Parga, Ionian, Greece
+            </div>
+
+            <div class="link-section">
+                <div class="platform-label">🏠 Airbnb</div>
+                <div class="link-container">
+                    <a href="https://www.airbnb.com/s/Parga%2C%20Ionian%2C%20Greece/homes?checkin=2026-06-25&checkout=2026-07-05&adults=2&children=2&search_type=filter_change" target="_blank" class="search-link airbnb">
+                        Search on Airbnb →
+                    </a>
+                    <button class="copy-btn" onclick="copyToClipboard('https://www.airbnb.com/s/Parga%2C%20Ionian%2C%20Greece/homes?checkin=2026-06-25&checkout=2026-07-05&adults=2&children=2&search_type=filter_change')">
+                        📋 Copy URL
+                    </button>
+                </div>
+            </div>
+
+            <div class="link-section">
+                <div class="platform-label">🏨 Booking.com</div>
+                <div class="link-container">
+                    <a href="https://www.booking.com/searchresults.html?ss=Parga&checkin=2026-06-25&checkout=2026-07-05&group_adults=2&group_children=2&no_rooms=1&nflt=ht_id%3D201" target="_blank" class="search-link booking">
+                        Search on Booking.com →
+                    </a>
+                    <button class="copy-btn" onclick="copyToClipboard('https://www.booking.com/searchresults.html?ss=Parga&checkin=2026-06-25&checkout=2026-07-05&group_adults=2&group_children=2&no_rooms=1&nflt=ht_id%3D201')">
+                        📋 Copy URL
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="location-card">
+            <div class="location-name">
+                📍 Sivota, Ionian, Greece
+            </div>
+
+            <div class="link-section">
+                <div class="platform-label">🏠 Airbnb</div>
+                <div class="link-container">
+                    <a href="https://www.airbnb.com/s/Sivota%2C%20Ionian%2C%20Greece/homes?checkin=2026-06-25&checkout=2026-07-05&adults=2&children=2&search_type=filter_change" target="_blank" class="search-link airbnb">
+                        Search on Airbnb →
+                    </a>
+                    <button class="copy-btn" onclick="copyToClipboard('https://www.airbnb.com/s/Sivota%2C%20Ionian%2C%20Greece/homes?checkin=2026-06-25&checkout=2026-07-05&adults=2&children=2&search_type=filter_change')">
+                        📋 Copy URL
+                    </button>
+                </div>
+            </div>
+
+            <div class="link-section">
+                <div class="platform-label">🏨 Booking.com</div>
+                <div class="link-container">
+                    <a href="https://www.booking.com/searchresults.html?ss=Sivota&checkin=2026-06-25&checkout=2026-07-05&group_adults=2&group_children=2&no_rooms=1&nflt=ht_id%3D201" target="_blank" class="search-link booking">
+                        Search on Booking.com →
+                    </a>
+                    <button class="copy-btn" onclick="copyToClipboard('https://www.booking.com/searchresults.html?ss=Sivota&checkin=2026-06-25&checkout=2026-07-05&group_adults=2&group_children=2&no_rooms=1&nflt=ht_id%3D201')">
+                        📋 Copy URL
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="location-card">
+            <div class="location-name">
+                📍 Lefkada, Ionian, Greece
+            </div>
+
+            <div class="link-section">
+                <div class="platform-label">🏠 Airbnb</div>
+                <div class="link-container">
+                    <a href="https://www.airbnb.com/s/Lefkada%2C%20Ionian%2C%20Greece/homes?checkin=2026-06-25&checkout=2026-07-05&adults=2&children=2&search_type=filter_change" target="_blank" class="search-link airbnb">
+                        Search on Airbnb →
+                    </a>
+                    <button class="copy-btn" onclick="copyToClipboard('https://www.airbnb.com/s/Lefkada%2C%20Ionian%2C%20Greece/homes?checkin=2026-06-25&checkout=2026-07-05&adults=2&children=2&search_type=filter_change')">
+                        📋 Copy URL
+                    </button>
+                </div>
+            </div>
+
+            <div class="link-section">
+                <div class="platform-label">🏨 Booking.com</div>
+                <div class="link-container">
+                    <a href="https://www.booking.com/searchresults.html?ss=Lefkada&checkin=2026-06-25&checkout=2026-07-05&group_adults=2&group_children=2&no_rooms=1&nflt=ht_id%3D201" target="_blank" class="search-link booking">
+                        Search on Booking.com →
+                    </a>
+                    <button class="copy-btn" onclick="copyToClipboard('https://www.booking.com/searchresults.html?ss=Lefkada&checkin=2026-06-25&checkout=2026-07-05&group_adults=2&group_children=2&no_rooms=1&nflt=ht_id%3D201')">
+                        📋 Copy URL
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="next-step">
+            <h3>✅ Done Browsing?</h3>
+            <p>Now add the properties you found to your tracker!</p>
+            <a href="vacation_tracker.html" class="tracker-link">
+                Open Price Tracker →
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ URL copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+    </script>
+</body>
+</html>

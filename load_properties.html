@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Load Sample Properties</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .status {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            display: block;
+        }
+
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏖️ Load Sample Properties</h1>
+        <p>Click the button below to load 15 sample properties into your tracker.</p>
+        <button onclick="loadProperties()">Load Properties</button>
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        const sampleData = {
+  "listings": [
+    {
+      "id": 1,
+      "title": "Beachfront Villa with Pool - Vourvourou",
+      "platform": "airbnb",
+      "url": "https://www.airbnb.com/rooms/vourvourou-villa-1",
+      "priceHistory": [
+        {
+          "price": 1280,
+          "date": "2026-03-25T16:13:26.926495"
+        }
+      ],
+      "addedAt": "2026-03-25T16:13:26.926511",
+      "location": "Vourvourou, Chalkidiki"
+    },
+    {
+      "id": 2,
+      "title": "Modern Apartment 50m from Beach - Vourvourou",
+      "platform": "airbnb",
+      "url": "https://www.airbnb.com/rooms/vourvourou-apt-2",
+      "priceHistory": [
+        {
+          "price": 1450,
+          "date": "2026-03-25T16:13:26.926514"
+        }
+      ],
+      "addedAt": "2026-03-25T16:13:26.926516",
+      "location": "Vourvourou, Chalkidiki"
+    },
+    {
+      "id": 3,
+      "title": "Family Apartment Near Karidi Beach - Vourvourou",
+      "platform": "booking",
+      "url": "https://www.booking.com/hotel/gr/vourvourou-family-apt",
+      "priceHistory": [
+        {
+          "price": 1350,
+          "date": "2026-03-25T16:13:26.926518"
+        }
+      ],
+      "addedAt": "2026-03-25T16:13:26.926519",
+      "location": "Vourvourou, Chalkidiki"
+    },
+    {
+      "id": 4,
+      "title": "Seaside Villa with Amazing Views - Sithonia",
+      "platform": "airbnb",
+      "url": "https://www.airbnb.com/rooms/sithonia-villa-1",
+      "priceHistory": [
+        {
+          "price": 1580,
+          "date": "2026-03-25T16:13:26.926521"
+        }
+      ],
+      "addedAt": "2026-03-25T16:13:26.926523",
+      "location": "Sithonia, Chalkidiki"
+    },
+    {
+      "id": 5,
+      "title": "Cozy Beachfront Apartment - Sithonia",
+      "platform": "booking",
+      "url": "https://www.booking.com/hotel/gr/sithonia-beachfront",
+      "priceHistory": [
+        {
+          "price": 1420,
+          "date": "2026-03-25T16:13:26.926524"
+        }
+      ],
+      "addedAt": "2026-03-25T16:13:26.926526",
+      "location": "Sithonia, Chalkidiki"
+    },
+    {
+      "id": 6,
+      "title": "Luxury Apartment with Pool - Kassandra",
+      "platform": "airbnb",
+      "url": "https://www.airbnb.com/rooms/kassandra-luxury-1",
+      "priceHistory": [
+        {
+          "price": 1620,
+          "date": "2026-03-25T16:13:26.926531"
+        }
+      ],
+      "addedAt": "2026-03-25T16:13:26.926533",
+      "location": "Kassandra, Chalkidiki"
+    },
+    {
+      "id": 7,
+      "title": "Beach House with Garden - Kassandra",
+      "platform": "booking",
+      "url": "https://www.booking.com/hotel/gr/kassandra-beach-house",
+      "priceHistory": [
+        {
+          "price": 1380,
+          "date": "2026-03-25T16:13:26.926535"
+        }
+      ],
+      "addedAt": "2026-03-25T16:13:26.926536",
+      "location": "Kassandra, Chalkidiki"
+    },
+    {
+      "id": 8,
+      "title": "Charming Villa Near Town - Parga",
+      "platform": "airbnb",
+      "url": "https://www.airbnb.com/rooms/parga-villa-1",
+      "priceHistory": [
+        {
+          "price": 1480,
+          "date": "2026-03-25T16:13:26.926538"
+        }
+      ],
+      "addedAt": "2026-03-25T16:13:26.926541",
+      "location": "Parga, Ionian"
+    },
+    {
+      "id": 9,
+      "title": "Waterfront Apartment - Parga",
+      "platform": "booking",
+      "url": "https://www.booking.com/hotel/gr/parga-waterfront",
+      "priceHistory": [
+        {
+          "price": 1290,
+          "date": "2026-03-25T16:13:26.926543"
+        }
+      ],
+      "addedAt": "2026-03-25T16:13:26.926545",
+      "location": "Parga, Ionian"
+    },
+    {
+      "id": 10,
+      "title": "Peaceful Villa with Sea View - Sivota",
+      "platform": "airbnb",
+      "url": "https://www.airbnb.com/rooms/sivota-villa-1",
+      "priceHistory": [
+        {
+          "price": 1520,
+          "date": "2026-03-25T16:13:26.926547"
+        }
+      ],
+      "addedAt": "2026-03-25T16:13:26.926548",
+      "location": "Sivota, Ionian"
+    },
+    {
+      "id": 11,
+      "title": "Modern Apartment Close to Beach - Sivota",
+      "platform": "booking",
+      "url": "https://www.booking.com/hotel/gr/sivota-modern-apt",
+      "priceHistory": [
+        {
+          "price": 1410,
+          "date": "2026-03-25T16:13:26.926550"
+        }
+      ],
+      "addedAt": "2026-03-25T16:13:26.926552",
+      "location": "Sivota, Ionian"
+    },
+    {
+      "id": 12,
+      "title": "Stunning Villa with Private Pool - Lefkada",
+      "platform": "airbnb",
+      "url": "https://www.airbnb.com/rooms/lefkada-villa-1",
+      "priceHistory": [
+        {
+          "price": 1650,
+          "date": "2026-03-25T16:13:26.926554"
+        }
+      ],
+      "addedAt": "2026-03-25T16:13:26.926555",
+      "location": "Lefkada, Ionian"
+    },
+    {
+      "id": 13,
+      "title": "Family Friendly Apartment - Lefkada",
+      "platform": "booking",
+      "url": "https://www.booking.com/hotel/gr/lefkada-family",
+      "priceHistory": [
+        {
+          "price": 1320,
+          "date": "2026-03-25T16:13:26.926559"
+        }
+      ],
+      "addedAt": "2026-03-25T16:13:26.926560",
+      "location": "Lefkada, Ionian"
+    },
+    {
+      "id": 14,
+      "title": "Budget Friendly Villa - Vourvourou",
+      "platform": "airbnb",
+      "url": "https://www.airbnb.com/rooms/vourvourou-budget-1",
+      "priceHistory": [
+        {
+          "price": 1180,
+          "date": "2026-03-25T16:13:26.926562"
+        }
+      ],
+      "addedAt": "2026-03-25T16:13:26.926564",
+      "location": "Vourvourou, Chalkidiki"
+    },
+    {
+      "id": 15,
+      "title": "Spacious Apartment Near Beach - Vourvourou",
+      "platform": "booking",
+      "url": "https://www.booking.com/hotel/gr/vourvourou-spacious",
+      "priceHistory": [
+        {
+          "price": 1490,
+          "date": "2026-03-25T16:13:26.926566"
+        }
+      ],
+      "addedAt": "2026-03-25T16:13:26.926567",
+      "location": "Vourvourou, Chalkidiki"
+    }
+  ],
+  "config": {
+    "budget": 1500,
+    "checkin": "2026-06-25",
+    "checkout": "2026-07-05",
+    "nights": 10
+  }
+};
+
+        function loadProperties() {
+            try {
+                // Save to localStorage
+                localStorage.setItem('vacationTracker', JSON.stringify(sampleData));
+
+                const statusDiv = document.getElementById('status');
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = `
+                    <h2>✅ Success!</h2>
+                    <p>Loaded ${sampleData.listings.length} properties.</p>
+                    <p>Opening tracker now...</p>
+                `;
+
+                // Open tracker after 1 second
+                setTimeout(() => {
+                    window.location.href = 'vacation_tracker.html';
+                }, 1500);
+
+            } catch (error) {
+                const statusDiv = document.getElementById('status');
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = `
+                    <h2>❌ Error</h2>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

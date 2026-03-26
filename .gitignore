@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+scraper.log
+.claude/
+vacation_report.html
+listings_data.json
+test_config_temp.json

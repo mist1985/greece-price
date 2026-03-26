@@ -1,0 +1,161 @@
+╔════════════════════════════════════════════════════════════════════╗
+║                                                                    ║
+║        🏖️  GREECE VACATION TRACKER - QUICK REFERENCE  🏖️         ║
+║                                                                    ║
+╚════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════
+📖 GETTING STARTED (First Time)
+═══════════════════════════════════════════════════════════════════
+
+Step 1: Double-click START_HERE.sh
+        (or run: ./START_HERE.sh)
+
+Step 2: Browser opens with search links
+
+Step 3: Click through links to browse properties
+
+Step 4: When you find a property:
+        → Copy the URL
+        → Note the price
+        → Go to tracker (link at bottom)
+        → Paste URL + price
+        → Click "Add"
+
+═══════════════════════════════════════════════════════════════════
+🔄 DAILY/WEEKLY TRACKING
+═══════════════════════════════════════════════════════════════════
+
+1. Open: vacation_tracker.html (bookmark it!)
+
+2. Click each property link
+
+3. Check current price on the website
+
+4. If price changed:
+   → Enter new price in the box
+   → Click "Update Price"
+
+5. Watch the chart for trends!
+
+═══════════════════════════════════════════════════════════════════
+📁 FILES YOU NEED TO KNOW
+═══════════════════════════════════════════════════════════════════
+
+START_HERE.sh           → Run this to start!
+vacation_tracker.html   → Main tracker (bookmark this!)
+search_links.html       → Pre-configured search links
+config.json            → Your trip settings
+README_NEW.md          → Full documentation
+
+═══════════════════════════════════════════════════════════════════
+⚙️  CUSTOMIZE YOUR SEARCH
+═══════════════════════════════════════════════════════════════════
+
+Edit config.json:
+
+{
+  "checkin": "2026-06-25",        ← Change dates
+  "checkout": "2026-07-05",
+  "adults": 2,                    ← Change guests
+  "children": 2,
+  "budget": 1500,                 ← Change budget
+  "locations": [...]              ← Add/remove locations
+}
+
+Then run START_HERE.sh again to regenerate links!
+
+═══════════════════════════════════════════════════════════════════
+💡 PRO TIPS
+═══════════════════════════════════════════════════════════════════
+
+✅ Track 10-20 properties across different locations
+✅ Check prices every 2-3 days
+✅ Track for 2-3 weeks before booking
+✅ Book immediately when you see a price drop
+✅ Use "Export Data" to backup your tracking
+✅ Look for properties with free cancellation
+
+═══════════════════════════════════════════════════════════════════
+🎯 YOUR VACATION DETAILS
+═══════════════════════════════════════════════════════════════════
+
+Dates:     June 25 - July 5, 2026 (10 nights)
+Guests:    2 adults, 2 children (ages 9 & 4)
+Budget:    €1500 (€150/night)
+Location:  Vourvourou (dream!) + other Chalkidiki & Ionian spots
+Must-have: Air conditioning, beach access, kid-friendly
+
+═══════════════════════════════════════════════════════════════════
+🏖️  RECOMMENDED LOCATIONS
+═══════════════════════════════════════════════════════════════════
+
+🌊 VOURVOUROU (Your #1 Choice!)
+   • Turquoise shallow waters
+   • Perfect for young kids
+   • Beautiful beaches
+   • Book early - very popular!
+
+🌊 SITHONIA
+   • Less touristy
+   • Pristine beaches
+   • Family-friendly
+
+🌊 PARGA (Ionian)
+   • Stunning town
+   • Calm waters
+   • Great for kids
+
+🌊 SIVOTA (Ionian)
+   • Peaceful
+   • Crystal-clear water
+   • Safe swimming
+
+═══════════════════════════════════════════════════════════════════
+🚨 TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════════
+
+Problem: Search links don't open
+Solution: Run START_HERE.sh again
+
+Problem: Tracker not saving data
+Solution: Use same browser each time, enable cookies
+
+Problem: Can't see prices
+Solution: Make sure dates are correct on booking sites
+
+Problem: Links are old
+Solution: Edit config.json and run START_HERE.sh
+
+═══════════════════════════════════════════════════════════════════
+📊 UNDERSTANDING THE TRACKER
+═══════════════════════════════════════════════════════════════════
+
+GREEN CARDS    → Within your €1500 budget ✅
+RED CARDS      → Over budget ❌
+↑ RED ARROW    → Price went up
+↓ GREEN ARROW  → Price went down (good!)
+CHART          → Shows trends over time
+
+═══════════════════════════════════════════════════════════════════
+🎉 SUCCESS WORKFLOW
+═══════════════════════════════════════════════════════════════════
+
+Week 1:  Add 15-20 properties to tracker
+Week 2:  Check prices daily, watch trends
+Week 3:  Identify best options
+Week 4:  Book when price drops or stays stable!
+
+═══════════════════════════════════════════════════════════════════
+📞 NEED MORE HELP?
+═══════════════════════════════════════════════════════════════════
+
+Read: README_NEW.md (detailed guide)
+Check: config.json (your settings)
+Run: ./START_HERE.sh (restart everything)
+
+═══════════════════════════════════════════════════════════════════
+
+🏖️  Καλές διακοπές! (Happy Vacation!)  🏖️
+
+═══════════════════════════════════════════════════════════════════

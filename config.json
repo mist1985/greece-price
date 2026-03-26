@@ -1,0 +1,30 @@
+{
+  "budget": 1500,
+  "checkin": "2026-06-25",
+  "checkout": "2026-07-05",
+  "nights": 10,
+  "datesStr": "Jun 25 \u2013 Jul 5, 2026",
+  "bedrooms": 2,
+  "ac": true,
+  "parking": true,
+  "kitchen": true,
+  "beachfront": true,
+  "adults": 2,
+  "amenities": [
+    "air conditioning",
+    "wifi",
+    "beach access"
+  ],
+  "children": 2,
+  "locations": [
+    "Vourvourou, Chalkidiki, Greece",
+    "Sithonia, Chalkidiki, Greece",
+    "Kassandra, Chalkidiki, Greece",
+    "Parga, Ionian, Greece",
+    "Sivota, Ionian, Greece",
+    "Lefkada, Ionian, Greece"
+  ],
+  "max_listings_per_location": 10,
+  "min_bedrooms": 2,
+  "notes": "Family-friendly beaches with warm, calm waters. No cliffy areas for safety with young children."
+}

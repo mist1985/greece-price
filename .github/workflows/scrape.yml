@@ -1,0 +1,41 @@
+name: Daily Price Scraper
+
+on:
+  schedule:
+    - cron: '0 7 * * *'   # 9:00 AM CET (UTC+2 in summer)
+  workflow_dispatch:        # allow manual run from GitHub UI
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install playwright beautifulsoup4 requests lxml
+          playwright install chromium --with-deps
+
+      - name: Run scraper
+        run: python daily_scraper.py
+        continue-on-error: true   # don't fail the whole job if scraping is blocked
+
+      - name: Commit updated tracker_data.js
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tracker_data.js
+          git diff --cached --quiet || git commit -m "chore: update prices $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push
