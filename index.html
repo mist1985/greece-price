@@ -612,7 +612,6 @@ async function fetchConfig() {
              // If server config was empty, use local
              if (!CFG.budget && localCfg.budget) {
                  CFG = { ...CFG, ...localCfg };
-                 fetch('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(CFG) });
              }
         }
     } catch(e) {}
@@ -658,46 +657,12 @@ function updateConfig() {
 }
 
 function startScrape() {
-    const btn = document.getElementById('btnScrape');
     const container = document.getElementById('progressContainer');
     const bar = document.getElementById('progressBar');
     const text = document.getElementById('progressText');
-    
-    btn.disabled = true;
-    btn.innerHTML = '🏃 Scraping (Please wait...)';
-    btn.style.opacity = '0.5';
     container.style.display = 'block';
-    bar.style.width = '0%';
-    text.innerText = 'Initializing backend engine...';
-    
-    // Call scrape API
-    fetch('/api/scrape', { method: 'POST' }).then(() => {
-        // Start listening to SSE logs
-        const source = new EventSource('/api/progress');
-        source.onmessage = function(e) {
-            const data = e.data;
-            const match = data.match(/\[PROGRESS\] (\d+)% - (.*)/);
-            if (match) {
-                const pct = match[1];
-                const msg = match[2];
-                bar.style.width = pct + '%';
-                text.innerText = pct + '% — ' + msg;
-                
-                if (pct === '100') {
-                    source.close();
-                    text.innerText = '✅ Scrape Complete! Reloading data...';
-                    setTimeout(() => {
-                        window.location.reload(); 
-                    }, 1500);
-                }
-            }
-        };
-        source.onerror = function() {
-            // Optional error handling
-        };
-    }).catch(e => {
-        alert("Failed to start scraper. Is app.py running?");
-    });
+    bar.style.width = '100%';
+    text.innerText = '✅ Scraping runs automatically every day at 9:00 AM CET via GitHub Actions — no action needed. Prices update here automatically.';
 }
 
 // ── State ──────────────────────────────────────────────────────────────────
