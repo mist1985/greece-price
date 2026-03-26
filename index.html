@@ -469,9 +469,9 @@
             <button id="btnScrape" class="btn-add" onclick="startScrape()" style="padding: 6px 16px;">▶ Run Scraper Now</button>
         </h3>
         
-        <div id="progressContainer" style="display:none; margin-bottom: 20px; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 2px;">
+        <div id="progressContainer" style="display:none; margin-bottom: 20px; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 14px;">
             <div id="progressBar" style="height: 12px; background: linear-gradient(90deg, #34d399, #38bdf8); width: 0%; border-radius: 6px; transition: width 0.3s;"></div>
-            <div id="progressText" style="text-align:center; font-size:0.8em; color:#94a3b8; margin-top:5px;">Initializing...</div>
+            <div id="progressText" style="text-align:center; font-size:0.95em; color:#e2e8f0; margin-top:10px; font-weight:500;">Initializing...</div>
         </div>
 
         <div class="quick-add-form" style="grid-template-columns: 1fr 1fr 1fr 1fr 2fr; gap: 15px; margin-bottom: 16px;">
@@ -676,8 +676,7 @@ function startScrape() {
 
     const token = localStorage.getItem('ghToken');
     if (!token) {
-        bar.style.width = '0%';
-        text.innerText = '⚠️ No GitHub token saved. Enter your token in the field below and click Save, then try again.';
+        alert('⚠️ No GitHub token saved.\n\nScroll down to the 🔑 GitHub Token field, paste your token and click Save — then try again.');
         return;
     }
 
