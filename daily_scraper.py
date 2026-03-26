@@ -117,8 +117,9 @@ def extract_price(text: str) -> float:
     converted = [v * conversion_rate for v in nums if (v * conversion_rate) > 20.0]
     
     if converted:
-        # The correct price (discounted price, or total price) is almost always the LAST number in the card text!
-        return converted[-1]
+        # Use the largest plausible price — when both per-night and total appear,
+        # the total is always the bigger number.
+        return max(converted)
         
     return 0.0
 
@@ -176,7 +177,7 @@ def scrape_airbnb(search: Dict, budget: int, checkin: str, checkout: str) -> Lis
                     "Chrome/122.0.0.0 Safari/537.36"
                 ),
                 locale="en-GB",
-                timezone_id="Europe/Skopje"
+                timezone_id="Europe/Athens"
             )
             ctx.set_default_timeout(60_000)
             page = ctx.new_page()
@@ -268,13 +269,13 @@ def scrape_airbnb(search: Dict, budget: int, checkin: str, checkout: str) -> Lis
                         except Exception:
                             continue
 
-                    # Airbnb cards often show per-night price rather than total.
-                    # If the extracted price implies < €25/night it is per-night → multiply.
+                    # If the extracted value is implausibly low for a total stay price,
+                    # treat it as per-night and multiply. Threshold: €60/night min.
                     nights = (
                         datetime.strptime(checkout, "%Y-%m-%d")
                         - datetime.strptime(checkin, "%Y-%m-%d")
                     ).days
-                    if 0 < price < nights * 25:
+                    if 0 < price < nights * 60:
                         price = price * nights
 
                     listings.append({
@@ -413,6 +414,14 @@ def scrape_booking(search: Dict, budget: int, checkin: str, checkout: str) -> Li
                                     break
                         except Exception:
                             continue
+
+                    # Same per-night guard as Airbnb
+                    nights = (
+                        datetime.strptime(checkout, "%Y-%m-%d")
+                        - datetime.strptime(checkin, "%Y-%m-%d")
+                    ).days
+                    if 0 < price < nights * 60:
+                        price = price * nights
 
                     listings.append({
                         "id": abs(hash(canonical_url)) % 1_000_000,
