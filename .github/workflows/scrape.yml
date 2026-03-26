@@ -20,6 +20,12 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Set up Python venv
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -q playwright beautifulsoup4 requests lxml
+          .venv/bin/playwright install chromium
+
       - name: Run scraper
         run: .venv/bin/python daily_scraper.py
         continue-on-error: true   # don't fail the whole job if scraping is blocked
