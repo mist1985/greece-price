@@ -279,7 +279,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:30.530407"
       },
       {
-        "price": 140.0,
+        "price": 1400.0,
         "date": "2026-03-26T19:17:50.233556"
       }
     ],
@@ -305,7 +305,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:30.530407"
       },
       {
-        "price": 167.0,
+        "price": 1670.0,
         "date": "2026-03-26T19:17:50.233556"
       }
     ],
@@ -353,7 +353,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:30.530407"
       },
       {
-        "price": 201.0,
+        "price": 2010.0,
         "date": "2026-03-26T19:17:50.233556"
       }
     ],
@@ -407,7 +407,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:30.530407"
       },
       {
-        "price": 195.0,
+        "price": 1950.0,
         "date": "2026-03-26T19:17:50.233556"
       }
     ],
@@ -855,7 +855,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:56.690362"
       },
       {
-        "price": 143.0,
+        "price": 1430.0,
         "date": "2026-03-26T19:18:13.377686"
       }
     ],
@@ -1105,7 +1105,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:22.220323"
       },
       {
-        "price": 124.0,
+        "price": 1240.0,
         "date": "2026-03-26T19:18:36.702034"
       }
     ],
@@ -2329,7 +2329,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:47:40.396410"
       },
       {
-        "price": 148.0,
+        "price": 1480.0,
         "date": "2026-03-26T19:19:46.974885"
       }
     ],
@@ -2355,7 +2355,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:47:40.396410"
       },
       {
-        "price": 101.0,
+        "price": 1010.0,
         "date": "2026-03-26T19:19:46.974885"
       }
     ],
@@ -2465,7 +2465,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:47:40.396410"
       },
       {
-        "price": 137.0,
+        "price": 1370.0,
         "date": "2026-03-26T19:19:46.974885"
       }
     ],
@@ -2491,7 +2491,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:47:40.396410"
       },
       {
-        "price": 137.0,
+        "price": 1370.0,
         "date": "2026-03-26T19:19:46.974885"
       }
     ],
@@ -2643,7 +2643,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:30.530407"
       },
       {
-        "price": 210.0,
+        "price": 2100.0,
         "date": "2026-03-26T19:17:50.233556"
       }
     ],
@@ -2749,7 +2749,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:30.530407"
       },
       {
-        "price": 204.0,
+        "price": 2040.0,
         "date": "2026-03-26T19:17:50.233556"
       }
     ],
@@ -2815,7 +2815,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:30.530407"
       },
       {
-        "price": 239.0,
+        "price": 2390.0,
         "date": "2026-03-26T19:17:50.233556"
       }
     ],
@@ -2837,7 +2837,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:56.690362"
       },
       {
-        "price": 113.0,
+        "price": 1130.0,
         "date": "2026-03-26T19:18:13.377686"
       }
     ],
@@ -2859,7 +2859,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:56.690362"
       },
       {
-        "price": 122.0,
+        "price": 1220.0,
         "date": "2026-03-26T19:18:13.377686"
       }
     ],
@@ -2881,7 +2881,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:56.690362"
       },
       {
-        "price": 175.0,
+        "price": 1750.0,
         "date": "2026-03-26T19:18:13.377686"
       }
     ],
@@ -2931,7 +2931,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:56.690362"
       },
       {
-        "price": 123.0,
+        "price": 1230.0,
         "date": "2026-03-26T19:18:13.377686"
       }
     ],
@@ -2953,7 +2953,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:56.690362"
       },
       {
-        "price": 153.0,
+        "price": 1530.0,
         "date": "2026-03-26T19:18:13.377686"
       }
     ],
@@ -2975,7 +2975,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:56.690362"
       },
       {
-        "price": 107.0,
+        "price": 1070.0,
         "date": "2026-03-26T19:18:13.377686"
       }
     ],
@@ -2997,7 +2997,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:56.690362"
       },
       {
-        "price": 197.0,
+        "price": 1970.0,
         "date": "2026-03-26T19:18:13.377686"
       }
     ],
@@ -3019,7 +3019,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:56.690362"
       },
       {
-        "price": 113.0,
+        "price": 1130.0,
         "date": "2026-03-26T19:18:13.377686"
       }
     ],
@@ -3133,7 +3133,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:22.220323"
       },
       {
-        "price": 106.0,
+        "price": 1060.0,
         "date": "2026-03-26T19:18:36.702034"
       }
     ],
@@ -3205,7 +3205,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:22.220323"
       },
       {
-        "price": 123.0,
+        "price": 1230.0,
         "date": "2026-03-26T19:18:36.702034"
       }
     ],
@@ -3227,7 +3227,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:22.220323"
       },
       {
-        "price": 130.0,
+        "price": 1300.0,
         "date": "2026-03-26T19:18:36.702034"
       }
     ],
@@ -3313,7 +3313,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:22.220323"
       },
       {
-        "price": 222.0,
+        "price": 2220.0,
         "date": "2026-03-26T19:18:36.702034"
       }
     ],
@@ -3335,7 +3335,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:22.220323"
       },
       {
-        "price": 81.0,
+        "price": 810.0,
         "date": "2026-03-26T19:18:36.702034"
       }
     ],
@@ -3497,7 +3497,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:48.737747"
       },
       {
-        "price": 138.0,
+        "price": 1380.0,
         "date": "2026-03-26T19:19:00.363885"
       }
     ],
@@ -3519,7 +3519,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:48.737747"
       },
       {
-        "price": 133.0,
+        "price": 1330.0,
         "date": "2026-03-26T19:19:00.363885"
       }
     ],
@@ -3555,7 +3555,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:48.737747"
       },
       {
-        "price": 116.0,
+        "price": 1160.0,
         "date": "2026-03-26T19:19:00.363885"
       }
     ],
@@ -3577,7 +3577,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:48.737747"
       },
       {
-        "price": 208.0,
+        "price": 2080.0,
         "date": "2026-03-26T19:19:00.363885"
       }
     ],
@@ -3599,7 +3599,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:48.737747"
       },
       {
-        "price": 102.0,
+        "price": 1020.0,
         "date": "2026-03-26T19:19:00.363885"
       }
     ],
@@ -3621,7 +3621,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:48.737747"
       },
       {
-        "price": 109.0,
+        "price": 1090.0,
         "date": "2026-03-26T19:19:00.363885"
       }
     ],
@@ -3665,7 +3665,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:48.737747"
       },
       {
-        "price": 159.0,
+        "price": 1590.0,
         "date": "2026-03-26T19:19:00.363885"
       }
     ],
@@ -3687,7 +3687,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:48.737747"
       },
       {
-        "price": 104.0,
+        "price": 1040.0,
         "date": "2026-03-26T19:19:00.363885"
       }
     ],
@@ -3709,7 +3709,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:48.737747"
       },
       {
-        "price": 107.0,
+        "price": 1070.0,
         "date": "2026-03-26T19:19:00.363885"
       }
     ],
@@ -3753,7 +3753,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:48.737747"
       },
       {
-        "price": 79.0,
+        "price": 790.0,
         "date": "2026-03-26T19:19:00.363885"
       }
     ],
@@ -3897,7 +3897,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:47:14.594275"
       },
       {
-        "price": 109.0,
+        "price": 1090.0,
         "date": "2026-03-26T19:19:23.770655"
       }
     ],
@@ -4271,7 +4271,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:30.530407"
       },
       {
-        "price": 232.0,
+        "price": 2320.0,
         "date": "2026-03-26T19:17:50.233556"
       }
     ],
@@ -4289,7 +4289,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:56.690362"
       },
       {
-        "price": 182.0,
+        "price": 1820.0,
         "date": "2026-03-26T19:18:13.377686"
       }
     ],
@@ -4307,7 +4307,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:56.690362"
       },
       {
-        "price": 169.0,
+        "price": 1690.0,
         "date": "2026-03-26T19:18:13.377686"
       }
     ],
@@ -4325,7 +4325,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:45:56.690362"
       },
       {
-        "price": 203.0,
+        "price": 2030.0,
         "date": "2026-03-26T19:18:13.377686"
       }
     ],
@@ -4433,7 +4433,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:22.220323"
       },
       {
-        "price": 199.0,
+        "price": 1990.0,
         "date": "2026-03-26T19:18:36.702034"
       }
     ],
@@ -4451,7 +4451,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:22.220323"
       },
       {
-        "price": 215.0,
+        "price": 2150.0,
         "date": "2026-03-26T19:18:36.702034"
       }
     ],
@@ -4487,7 +4487,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:22.220323"
       },
       {
-        "price": 158.0,
+        "price": 1580.0,
         "date": "2026-03-26T19:18:36.702034"
       }
     ],
@@ -4505,7 +4505,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:48.737747"
       },
       {
-        "price": 164.0,
+        "price": 1640.0,
         "date": "2026-03-26T19:19:00.363885"
       }
     ],
@@ -4523,7 +4523,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:46:48.737747"
       },
       {
-        "price": 67.0,
+        "price": 670.0,
         "date": "2026-03-26T19:19:00.363885"
       }
     ],
@@ -4637,7 +4637,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:47:40.396410"
       },
       {
-        "price": 112.0,
+        "price": 1120.0,
         "date": "2026-03-26T19:19:46.974885"
       }
     ],
@@ -4655,7 +4655,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:47:40.396410"
       },
       {
-        "price": 123.0,
+        "price": 1230.0,
         "date": "2026-03-26T19:19:46.974885"
       }
     ],
@@ -4701,7 +4701,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:47:40.396410"
       },
       {
-        "price": 135.0,
+        "price": 1350.0,
         "date": "2026-03-26T19:19:46.974885"
       }
     ],
@@ -4719,7 +4719,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:47:40.396410"
       },
       {
-        "price": 245.0,
+        "price": 2450.0,
         "date": "2026-03-26T19:19:46.974885"
       }
     ],
@@ -4751,7 +4751,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:47:40.396410"
       },
       {
-        "price": 176.0,
+        "price": 1760.0,
         "date": "2026-03-26T19:19:46.974885"
       }
     ],
@@ -4769,7 +4769,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:47:40.396410"
       },
       {
-        "price": 108.0,
+        "price": 1080.0,
         "date": "2026-03-26T19:19:46.974885"
       }
     ],
@@ -4787,7 +4787,7 @@ window.__TRACKER_DATA__ = [
         "date": "2026-03-26T19:47:40.396410"
       },
       {
-        "price": 144.0,
+        "price": 1440.0,
         "date": "2026-03-26T19:19:46.974885"
       }
     ],
@@ -5039,7 +5039,7 @@ window.__TRACKER_DATA__ = [
     "url": "https://www.booking.com/hotel/gr/ziv-tonic-lefkada-town-square-apt-15.en-gb.html?aid=304142&label=gen173nr-10CAQoggJCFXNlYXJjaF9sZWZrYWRhIGlvbmlhbkgzWARosgKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4AsuNls4GwAIB0gIkMjI2ZDQ3Y2UtYWFkNy00MGFlLWFhMzUtZmI0MzMzMTgyNDAz2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-06-25&checkout=2026-07-05&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=0&req_age=0&age=0&req_age=0&hpos=3&hapos=3&sr_order=popularity&nflt=roomfacility%3D11&srpvid=430087e5c1c10452&srepoch=1774552784&all_sr_blocks=856636003_373794788_3_0_0&highlighted_blocks=856636003_373794788_3_0_0&matching_block_id=856636003_373794788_3_0_0&sr_pri_blocks=856636003_373794788_3_0_0__174846&from=searchresults",
     "priceHistory": [
       {
-        "price": 175.0,
+        "price": 1750.0,
         "date": "2026-03-26T19:19:46.974885"
       }
     ],
@@ -5053,7 +5053,7 @@ window.__TRACKER_DATA__ = [
     "url": "https://www.booking.com/hotel/gr/villa-elia-lefkada.en-gb.html?aid=304142&label=gen173nr-10CAQoggJCFXNlYXJjaF9sZWZrYWRhIGlvbmlhbkgzWARosgKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4AsuNls4GwAIB0gIkMjI2ZDQ3Y2UtYWFkNy00MGFlLWFhMzUtZmI0MzMzMTgyNDAz2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-06-25&checkout=2026-07-05&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=0&req_age=0&age=0&req_age=0&hpos=5&hapos=5&sr_order=popularity&nflt=roomfacility%3D11&srpvid=430087e5c1c10452&srepoch=1774552784&all_sr_blocks=63740605_338954336_0_2_0&highlighted_blocks=63740605_338954336_0_2_0&matching_block_id=63740605_338954336_0_2_0&sr_pri_blocks=63740605_338954336_0_2_0__210749&from=searchresults",
     "priceHistory": [
       {
-        "price": 211.0,
+        "price": 2110.0,
         "date": "2026-03-26T19:19:46.974885"
       }
     ],
@@ -5081,7 +5081,7 @@ window.__TRACKER_DATA__ = [
     "url": "https://www.booking.com/hotel/gr/carabella-residence.en-gb.html?aid=304142&label=gen173nr-10CAQoggJCFXNlYXJjaF9sZWZrYWRhIGlvbmlhbkgzWARosgKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4AsuNls4GwAIB0gIkMjI2ZDQ3Y2UtYWFkNy00MGFlLWFhMzUtZmI0MzMzMTgyNDAz2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-06-25&checkout=2026-07-05&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=0&req_age=0&age=0&req_age=0&hpos=13&hapos=13&sr_order=popularity&nflt=roomfacility%3D11&srpvid=430087e5c1c10452&srepoch=1774552784&all_sr_blocks=1006680001_387698571_4_0_0&highlighted_blocks=1006680001_387698571_4_0_0&matching_block_id=1006680001_387698571_4_0_0&sr_pri_blocks=1006680001_387698571_4_0_0__173762&from=searchresults",
     "priceHistory": [
       {
-        "price": 174.0,
+        "price": 1740.0,
         "date": "2026-03-26T19:19:46.974885"
       }
     ],

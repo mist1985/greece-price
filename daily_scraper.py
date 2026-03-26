@@ -268,6 +268,15 @@ def scrape_airbnb(search: Dict, budget: int, checkin: str, checkout: str) -> Lis
                         except Exception:
                             continue
 
+                    # Airbnb cards often show per-night price rather than total.
+                    # If the extracted price implies < €25/night it is per-night → multiply.
+                    nights = (
+                        datetime.strptime(checkout, "%Y-%m-%d")
+                        - datetime.strptime(checkin, "%Y-%m-%d")
+                    ).days
+                    if 0 < price < nights * 25:
+                        price = price * nights
+
                     listings.append({
                         "id": abs(hash(canonical_url)) % 1_000_000,
                         "title": title,
