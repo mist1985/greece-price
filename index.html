@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greece Vacation Price Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Live data injected by daily_scraper.py every day at 9:15 AM CET -->
+    <script src="tracker_data.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            padding: 24px;
+            color: #e2e8f0;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        /* ── Header ── */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a78bfa, #38bdf8, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+        }
+
+        .header .subtitle {
+            color: #94a3b8;
+            font-size: 1em;
+        }
+
+        .last-updated {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 4px 14px;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            border-radius: 20px;
+            font-size: 0.8em;
+            color: #a5b4fc;
+        }
+
+        /* ── Status banner (shown when no data yet) ── */
+        .status-banner {
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            border-radius: 12px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            color: #fbbf24;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ── Trip info bar ── */
+        .trip-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 28px;
+        }
+
+        .trip-chip {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 30px;
+            padding: 8px 18px;
+            font-size: 0.9em;
+            color: #cbd5e1;
+        }
+
+        .trip-chip strong { color: #e2e8f0; }
+
+        /* ── Stats ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover { transform: translateY(-3px); }
+
+        .stat-card.green { border-color: rgba(52, 211, 153, 0.4); }
+        .stat-card.red   { border-color: rgba(248, 113, 113, 0.4); }
+        .stat-card.gold  { border-color: rgba(251, 191, 36, 0.4); }
+
+        .stat-label { font-size: 0.78em; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-value { font-size: 2em; font-weight: 700; color: #f1f5f9; }
+        .stat-card.green .stat-value { color: #34d399; }
+        .stat-card.red   .stat-value { color: #f87171; }
+        .stat-card.gold  .stat-value { color: #fbbf24; }
+
+        /* ── Filters ── */
+        .filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .filter-btn {
+            padding: 8px 18px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 30px;
+            background: transparent;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: rgba(99, 102, 241, 0.3);
+            border-color: #6366f1;
+            color: #e2e8f0;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 30px;
+            color: #e2e8f0;
+            font-size: 0.85em;
+            font-family: inherit;
+            outline: none;
+        }
+        .search-input::placeholder { color: #475569; }
+        .search-input:focus { border-color: #6366f1; }
+
+        /* ── Listings grid ── */
+        .listings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .listing-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 22px;
+            transition: all 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .listing-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #6366f1, #38bdf8);
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+
+        .listing-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+        }
+
+        .listing-card:hover::before { opacity: 1; }
+
+        .listing-card.within-budget { border-color: rgba(52, 211, 153, 0.3); }
+        .listing-card.within-budget::before { background: linear-gradient(90deg, #34d399, #38bdf8); }
+
+        .listing-card.over-budget { border-color: rgba(248, 113, 113, 0.25); }
+
+        .listing-card.no-price { border-color: rgba(251, 191, 36, 0.25); }
+        .listing-card.no-price::before { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+
+        /* Card header */
+        .listing-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            gap: 8px;
+        }
+
+        .listing-title {
+            font-size: 1em;
+            font-weight: 600;
+            color: #f1f5f9;
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .platform-badge {
+            flex-shrink: 0;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .platform-airbnb  { background: rgba(255, 90, 95, 0.2); color: #fca5a5; border: 1px solid rgba(255,90,95,0.3); }
+        .platform-booking { background: rgba(0, 53, 128, 0.4); color: #93c5fd;  border: 1px solid rgba(147,197,253,0.3); }
+        .platform-other   { background: rgba(107, 114, 128, 0.3); color: #d1d5db; }
+
+        .location-tag {
+            font-size: 0.78em;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .current-price {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin: 10px 0;
+        }
+
+        .price-value {
+            font-size: 2em;
+            font-weight: 800;
+            color: #a78bfa;
+        }
+
+        .price-value.no-price-val { font-size: 1.1em; color: #64748b; }
+
+        .price-nights {
+            font-size: 0.8em;
+            color: #64748b;
+        }
+
+        .price-change-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.72em;
+            font-weight: 700;
+        }
+
+        .price-down { background: rgba(52,211,153,0.15); color: #34d399; }
+        .price-up   { background: rgba(248,113,113,0.15); color: #f87171; }
+
+        .budget-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 8px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .within-budget-badge { background: rgba(52,211,153,0.15); color: #34d399; }
+        .over-budget-badge   { background: rgba(248,113,113,0.15); color: #f87171; }
+        .no-price-badge      { background: rgba(251,191,36,0.15);  color: #fbbf24; }
+
+        .listing-url {
+            display: block;
+            color: #818cf8;
+            font-size: 0.78em;
+            text-decoration: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 8px 0;
+            transition: color 0.2s;
+        }
+        .listing-url:hover { color: #a5b4fc; text-decoration: underline; }
+
+        .history-mini {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin: 8px 0;
+        }
+
+        .history-dot {
+            font-size: 0.7em;
+            color: #475569;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            padding: 2px 6px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .btn-small {
+            flex: 1;
+            padding: 7px 10px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            font-family: inherit;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-open   { background: rgba(99,102,241,0.2); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.3); }
+        .btn-open:hover { background: rgba(99,102,241,0.4); }
+
+        .btn-delete { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
+        .btn-delete:hover { background: rgba(239,68,68,0.3); }
+
+        /* ── Quick-add ── */
+        .quick-add {
+            background: rgba(52,211,153,0.08);
+            border: 1px solid rgba(52,211,153,0.25);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 28px;
+        }
+
+        .quick-add h3 { color: #34d399; margin-bottom: 14px; font-size: 1em; }
+
+        .quick-add-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group label { font-size: 0.8em; color: #64748b; }
+
+        .form-group input {
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-family: inherit;
+            font-size: 0.9em;
+            outline: none;
+        }
+        .form-group input:focus { border-color: #6366f1; }
+        .form-group input::placeholder { color: #475569; }
+
+        .btn-add {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #34d399, #059669);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .btn-add:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(52,211,153,0.3); }
+
+        /* ── Chart ── */
+        .chart-section {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 28px;
+        }
+
+        .chart-section h2 { color: #a78bfa; margin-bottom: 16px; font-size: 1.1em; }
+
+        /* ── Actions bar ── */
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9em;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.06);
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.25); color: #f1f5f9; }
+
+        /* ── Empty state ── */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #475569;
+        }
+        .empty-state .big { font-size: 4em; display: block; margin-bottom: 16px; }
+        .empty-state h2 { font-size: 1.3em; margin-bottom: 8px; color: #64748b; }
+
+        /* ── Responsive ── */
+        @media (max-width: 700px) {
+            .listings-grid { grid-template-columns: 1fr; }
+            .quick-add-form { grid-template-columns: 1fr; }
+            .header h1 { font-size: 2em; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <h1>🏖️ Greece Vacation Tracker</h1>
+        <div class="subtitle">Automated daily price tracking • Jun 25 – Jul 5, 2026</div>
+        <div class="last-updated" id="lastUpdatedBadge">Loading…</div>
+    </div>
+
+    <!-- Status banner (shown until first scrape) -->
+    <div class="status-banner" id="statusBanner" style="display:none;">
+        ⏳ No data yet — the cron job runs at <strong>9:15 AM CET</strong> every day.
+        To get data now, run: <code style="background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:4px;">python3 /Users/mihajlo/Desktop/odmor/daily_scraper.py</code>
+    </div>
+
+    <!-- Main Control Panel -->
+    <div class="quick-add" style="margin-bottom: 24px; padding: 20px;">
+        <h3 style="margin-bottom:16px; font-size: 1.1em; color:#fff; display:flex; justify-content:space-between;">
+            <span>🚀 Scraper Control Panel</span>
+            <button id="btnScrape" class="btn-add" onclick="startScrape()" style="padding: 6px 16px;">▶ Run Scraper Now</button>
+        </h3>
+        
+        <div id="progressContainer" style="display:none; margin-bottom: 20px; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 2px;">
+            <div id="progressBar" style="height: 12px; background: linear-gradient(90deg, #34d399, #38bdf8); width: 0%; border-radius: 6px; transition: width 0.3s;"></div>
+            <div id="progressText" style="text-align:center; font-size:0.8em; color:#94a3b8; margin-top:5px;">Initializing...</div>
+        </div>
+
+        <div class="quick-add-form" style="grid-template-columns: 1fr 1fr 1fr 1fr 2fr; gap: 15px; margin-bottom: 16px;">
+            <div class="form-group">
+                <label>Budget (€)</label>
+                <input type="number" id="cfgBudget" value="1500" onchange="updateConfig()">
+            </div>
+            <div class="form-group">
+                <label>Adults</label>
+                <input type="number" id="cfgAdults" value="2" min="1" onchange="updateConfig()">
+            </div>
+            <div class="form-group">
+                <label>Children</label>
+                <input type="number" id="cfgChildren" value="2" min="0" onchange="updateConfig()">
+            </div>
+            <div class="form-group">
+                <label>Nights</label>
+                <input type="number" id="cfgNights" value="10" min="1" onchange="updateConfig()">
+            </div>
+            <div class="form-group">
+                <label>Check-in / Check-out Dates</label>
+                <input type="text" id="cfgDates" value="Jun 25 – Jul 5, 2026" onchange="updateConfig()">
+            </div>
+        </div>
+        
+        <!-- Amenities Form -->
+        <h4 style="font-size:0.85em; color:#94a3b8; margin-bottom: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">Filter Amenities (Applied on next scrape)</h4>
+        <div style="display:flex; gap: 20px; flex-wrap: wrap;">
+            <div class="form-group" style="flex-direction:row; align-items:center; gap:8px;">
+                <label style="margin:0;">Bedrooms: </label>
+                <input type="number" id="cfgBedrooms" value="0" min="0" style="width:60px; padding:4px 8px;" onchange="updateConfig()">
+            </div>
+            <label style="display:flex; align-items:center; gap:8px; color:#e2e8f0; font-size:0.9em; cursor:pointer;">
+                <input type="checkbox" id="cfgAC" onchange="updateConfig()"> ❄️ Air Conditioning
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; color:#e2e8f0; font-size:0.9em; cursor:pointer;">
+                <input type="checkbox" id="cfgParking" onchange="updateConfig()"> 🚗 Free Parking
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; color:#e2e8f0; font-size:0.9em; cursor:pointer;">
+                <input type="checkbox" id="cfgKitchen" onchange="updateConfig()"> 🍳 Kitchen
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; color:#e2e8f0; font-size:0.9em; cursor:pointer;">
+                <input type="checkbox" id="cfgBeachfront" onchange="updateConfig()"> 🏖️ Beachfront
+            </label>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">Tracked</div>
+            <div class="stat-value" id="statTotal">0</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-label">Within Budget</div>
+            <div class="stat-value" id="statWithin">0</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-label">Over Budget</div>
+            <div class="stat-value" id="statOver">0</div>
+        </div>
+        <div class="stat-card gold">
+            <div class="stat-label">Cheapest</div>
+            <div class="stat-value" id="statCheapest">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Price Drops</div>
+            <div class="stat-value" id="statDrops">0</div>
+        </div>
+    </div>
+
+    <!-- Quick add -->
+    <div class="quick-add">
+        <h3>➕ Manually Add a Property</h3>
+        <div class="quick-add-form">
+            <div class="form-group">
+                <label>Property URL (Airbnb or Booking.com)</label>
+                <input type="url" id="quickUrl" placeholder="https://www.airbnb.com/rooms/...">
+            </div>
+            <div class="form-group">
+                <label>Current Total Price (€)</label>
+                <input type="number" id="quickPrice" placeholder="1200" min="0" step="1">
+            </div>
+            <button class="btn-add" onclick="quickAddProperty()">Add</button>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+        <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+        <button class="filter-btn" onclick="setFilter('within', this)">✅ Within Budget</button>
+        <button class="filter-btn" onclick="setFilter('airbnb', this)">🏠 Airbnb</button>
+        <button class="filter-btn" onclick="setFilter('booking', this)">🏨 Booking.com</button>
+        <button class="filter-btn" onclick="setFilter('drops', this)">📉 Price Drops</button>
+        <input class="search-input" type="text" id="searchInput" placeholder="Search by title or location…" oninput="renderListings()">
+    </div>
+
+    <!-- Listings -->
+    <div class="listings-grid" id="listingsGrid"></div>
+
+    <!-- Chart -->
+    <div class="chart-section" id="chartSection" style="display:none;">
+        <h2>📈 Price Trends</h2>
+        <canvas id="priceChart"></canvas>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+        <a href="search_links.html" class="btn">🔍 Search Links</a>
+        <button class="btn" onclick="exportCSV()">📊 Export CSV</button>
+        <button class="btn" onclick="exportJSON()">💾 Export JSON</button>
+        <button class="btn" onclick="importJSON()">📂 Import JSON</button>
+        <button class="btn" onclick="clearManual()">🗑️ Clear Manual Entries</button>
+    </div>
+
+</div>
+
+<script>
+// ── Configuration ──────────────────────────────────────────────────────────
+let CFG = { budget: 1500, checkin: '2026-06-25', checkout: '2026-07-05', nights: 10, datesStr: 'Jun 25 – Jul 5, 2026', adults: 2, children: 2, bedrooms: 0, ac: false, parking: false, kitchen: false, beachfront: false };
+
+async function fetchConfig() {
+    try { 
+        const res = await fetch('/api/config');
+        if (res.ok) {
+            const serverConfig = await res.json();
+            if (serverConfig && Object.keys(serverConfig).length > 0) {
+                CFG = { ...CFG, ...serverConfig };
+            }
+        }
+    } catch(e) {}
+    
+    // Also merge from local storage as fallback
+    try { 
+        const saved = localStorage.getItem('tripConfig'); 
+        if (saved) {
+             const localCfg = JSON.parse(saved);
+             // If server config was empty, use local
+             if (!CFG.budget && localCfg.budget) {
+                 CFG = { ...CFG, ...localCfg };
+                 fetch('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(CFG) });
+             }
+        }
+    } catch(e) {}
+    
+    initConfigUI();
+    render();
+}
+
+function initConfigUI() {
+    if (document.getElementById('cfgBudget')) document.getElementById('cfgBudget').value = CFG.budget;
+    if (document.getElementById('cfgAdults')) document.getElementById('cfgAdults').value = CFG.adults !== undefined ? CFG.adults : 2;
+    if (document.getElementById('cfgChildren')) document.getElementById('cfgChildren').value = CFG.children !== undefined ? CFG.children : 2;
+    if (document.getElementById('cfgNights')) document.getElementById('cfgNights').value = CFG.nights;
+    if (document.getElementById('cfgDates'))  document.getElementById('cfgDates').value  = CFG.datesStr || 'Jun 25 – Jul 5, 2026';
+    if (document.getElementById('cfgBedrooms')) document.getElementById('cfgBedrooms').value = CFG.bedrooms || 0;
+    if (document.getElementById('cfgAC')) document.getElementById('cfgAC').checked = !!CFG.ac;
+    if (document.getElementById('cfgParking')) document.getElementById('cfgParking').checked = !!CFG.parking;
+    if (document.getElementById('cfgKitchen')) document.getElementById('cfgKitchen').checked = !!CFG.kitchen;
+    if (document.getElementById('cfgBeachfront')) document.getElementById('cfgBeachfront').checked = !!CFG.beachfront;
+}
+
+function updateConfig() {
+    CFG.budget = parseFloat(document.getElementById('cfgBudget').value) || 1500;
+    CFG.adults = parseInt(document.getElementById('cfgAdults').value) || 2;
+    CFG.children = parseInt(document.getElementById('cfgChildren').value) || 0;
+    CFG.nights = parseInt(document.getElementById('cfgNights').value) || 10;
+    CFG.datesStr = document.getElementById('cfgDates').value || '';
+    CFG.bedrooms = parseInt(document.getElementById('cfgBedrooms').value) || 0;
+    CFG.ac = document.getElementById('cfgAC').checked;
+    CFG.parking = document.getElementById('cfgParking').checked;
+    CFG.kitchen = document.getElementById('cfgKitchen').checked;
+    CFG.beachfront = document.getElementById('cfgBeachfront').checked;
+    
+    // Save to server config.json
+    fetch('/api/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(CFG)
+    }).catch(e => console.error("Failed to save config remotely", e));
+    
+    localStorage.setItem('tripConfig', JSON.stringify(CFG));
+    render();
+}
+
+function startScrape() {
+    const btn = document.getElementById('btnScrape');
+    const container = document.getElementById('progressContainer');
+    const bar = document.getElementById('progressBar');
+    const text = document.getElementById('progressText');
+    
+    btn.disabled = true;
+    btn.innerHTML = '🏃 Scraping (Please wait...)';
+    btn.style.opacity = '0.5';
+    container.style.display = 'block';
+    bar.style.width = '0%';
+    text.innerText = 'Initializing backend engine...';
+    
+    // Call scrape API
+    fetch('/api/scrape', { method: 'POST' }).then(() => {
+        // Start listening to SSE logs
+        const source = new EventSource('/api/progress');
+        source.onmessage = function(e) {
+            const data = e.data;
+            const match = data.match(/\[PROGRESS\] (\d+)% - (.*)/);
+            if (match) {
+                const pct = match[1];
+                const msg = match[2];
+                bar.style.width = pct + '%';
+                text.innerText = pct + '% — ' + msg;
+                
+                if (pct === '100') {
+                    source.close();
+                    text.innerText = '✅ Scrape Complete! Reloading data...';
+                    setTimeout(() => {
+                        window.location.reload(); 
+                    }, 1500);
+                }
+            }
+        };
+        source.onerror = function() {
+            // Optional error handling
+        };
+    }).catch(e => {
+        alert("Failed to start scraper. Is app.py running?");
+    });
+}
+
+// ── State ──────────────────────────────────────────────────────────────────
+let manualListings = [];   // entries added manually via the form (saved in localStorage)
+let activeFilter   = 'all';
+let priceChart     = null;
+
+// ── Boot ───────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+    fetchConfig(); // Replaces synchronous initConfigUI()
+    // Load manual entries from localStorage
+    try {
+        manualListings = JSON.parse(localStorage.getItem('manualListings') || '[]');
+    } catch(_) { manualListings = []; }
+
+    // Show last-updated badge (from tracker_data.js)
+    const updated = (typeof window.__LAST_UPDATED__ !== 'undefined')
+        ? window.__LAST_UPDATED__
+        : null;
+
+    if (updated && updated !== 'Never (first run pending)') {
+        document.getElementById('lastUpdatedBadge').textContent = '🕐 Last scraped: ' + updated;
+    } else {
+        document.getElementById('lastUpdatedBadge').textContent = '⏳ Not yet scraped';
+        document.getElementById('statusBanner').style.display = 'flex';
+    }
+
+    render();
+});
+
+// ── Combine scraped + manual listings ─────────────────────────────────────
+function allListings() {
+    const scraped = (typeof window.__TRACKER_DATA__ !== 'undefined' && Array.isArray(window.__TRACKER_DATA__))
+        ? window.__TRACKER_DATA__
+        : [];
+    // Merge; manual entries override scraped if same URL
+    const byUrl = {};
+    scraped.forEach(l => { byUrl[l.url] = l; });
+    manualListings.forEach(l => { byUrl[l.url] = l; });
+    return Object.values(byUrl);
+}
+
+// ── Filtering ──────────────────────────────────────────────────────────────
+function setFilter(f, btn) {
+    activeFilter = f;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderListings();
+}
+
+function filteredListings() {
+    const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
+    return allListings().filter(l => {
+        const price = currentPrice(l);
+        if (q && !l.title.toLowerCase().includes(q) && !(l.location||'').toLowerCase().includes(q)) return false;
+        if (activeFilter === 'within') return price > 0 && price <= CFG.budget;
+        if (activeFilter === 'airbnb')  return l.platform === 'airbnb';
+        if (activeFilter === 'booking') return l.platform === 'booking';
+        if (activeFilter === 'drops')   return hasPriceDrop(l);
+        return true;
+    });
+}
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+function currentPrice(l) {
+    if (!l.priceHistory || l.priceHistory.length === 0) return 0;
+    return l.priceHistory[l.priceHistory.length - 1].price || 0;
+}
+
+function hasPriceDrop(l) {
+    if (!l.priceHistory || l.priceHistory.length < 2) return false;
+    const prices = l.priceHistory.map(p => p.price).filter(p => p > 0);
+    if (prices.length < 2) return false;
+    return prices[prices.length - 1] < prices[prices.length - 2];
+}
+
+function priceChangeBadge(l) {
+    if (!l.priceHistory || l.priceHistory.length < 2) return '';
+    const prices = l.priceHistory.map(p => p.price).filter(p => p > 0);
+    if (prices.length < 2) return '';
+    const prev = prices[prices.length - 2];
+    const curr = prices[prices.length - 1];
+    const diff = curr - prev;
+    if (diff < 0) return `<span class="price-change-badge price-down">▼ €${Math.abs(diff).toFixed(0)}</span>`;
+    if (diff > 0) return `<span class="price-change-badge price-up">▲ €${diff.toFixed(0)}</span>`;
+    return '';
+}
+
+function detectPlatform(url) {
+    if (url.includes('airbnb.com'))   return 'airbnb';
+    if (url.includes('booking.com'))  return 'booking';
+    return 'other';
+}
+
+function formatDate(iso) {
+    try {
+        const d = new Date(iso);
+        return d.toLocaleDateString('en-GB', { day:'2-digit', month:'short' });
+    } catch(_) { return iso; }
+}
+
+// ── Render ─────────────────────────────────────────────────────────────────
+function render() {
+    updateStats();
+    renderListings();
+    renderChart();
+}
+
+function updateStats() {
+    const listings = allListings();
+    let within = 0, over = 0, drops = 0, cheapest = Infinity;
+
+    listings.forEach(l => {
+        const p = currentPrice(l);
+        if (p > 0) {
+            if (p <= CFG.budget) within++;
+            else over++;
+            if (p < cheapest) cheapest = p;
+        }
+        if (hasPriceDrop(l)) drops++;
+    });
+
+    document.getElementById('statTotal').textContent = listings.length;
+    document.getElementById('statWithin').textContent = within;
+    document.getElementById('statOver').textContent = over;
+    document.getElementById('statCheapest').textContent = cheapest < Infinity ? '€' + cheapest.toFixed(0) : '—';
+    document.getElementById('statDrops').textContent = drops;
+}
+
+function renderListings() {
+    const grid = document.getElementById('listingsGrid');
+    const items = filteredListings();
+
+    if (items.length === 0) {
+        const all = allListings();
+        if (all.length === 0) {
+            grid.innerHTML = `
+                <div class="empty-state" style="grid-column:1/-1">
+                    <span class="big">🏖️</span>
+                    <h2>No listings yet</h2>
+                    <p>The cron job runs at <strong>9:15 AM CET</strong> daily and will populate this page automatically.<br>
+                    Or run the scraper manually now and refresh this page.</p>
+                </div>`;
+        } else {
+            grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><span class="big">🔍</span><h2>No results match your filter</h2></div>`;
+        }
+        return;
+    }
+
+    // Sort by price ascending (no-price last)
+    const sorted = [...items].sort((a, b) => {
+        const pa = currentPrice(a), pb = currentPrice(b);
+        if (pa === 0 && pb === 0) return 0;
+        if (pa === 0) return 1;
+        if (pb === 0) return -1;
+        return pa - pb;
+    });
+
+    grid.innerHTML = sorted.map(l => {
+        const price  = currentPrice(l);
+        const noPrice = price <= 0;
+        const within  = !noPrice && price <= CFG.budget;
+        const cardClass = noPrice ? 'no-price' : (within ? 'within-budget' : 'over-budget');
+        const budgeBadge = noPrice
+            ? '<span class="budget-badge no-price-badge">⏳ Price pending</span>'
+            : (within
+                ? '<span class="budget-badge within-budget-badge">✅ Within Budget</span>'
+                : '<span class="budget-badge over-budget-badge">❌ Over Budget</span>');
+
+        const platformClass = `platform-${l.platform || 'other'}`;
+        const platformLabel = l.platform === 'airbnb' ? 'Airbnb' : (l.platform === 'booking' ? 'Booking.com' : 'Other');
+
+        const priceDisplay = noPrice
+            ? '<span class="price-value no-price-val">No price yet</span>'
+            : `<span class="price-value">€${price.toFixed(0)}</span><span class="price-nights">total · €${(price/CFG.nights).toFixed(0)}/night</span>`;
+
+        const historyHtml = (l.priceHistory && l.priceHistory.length > 1)
+            ? '<div class="history-mini">' +
+              l.priceHistory.slice(-5).map(h =>
+                  `<span class="history-dot">${formatDate(h.date)}: €${(h.price||0).toFixed(0)}</span>`
+              ).join('') + '</div>'
+            : '';
+
+        const shortUrl = (l.url || '').replace(/https?:\/\/(www\.)?/, '').substring(0, 55);
+
+        return `
+        <div class="listing-card ${cardClass}">
+            <div class="listing-header">
+                <div class="listing-title">${escHtml(l.title || 'Property')}</div>
+                <span class="platform-badge ${platformClass}">${platformLabel}</span>
+            </div>
+            <div class="location-tag">📍 ${escHtml(l.location || '')}</div>
+            ${budgeBadge}
+            <div class="current-price">
+                ${priceDisplay}
+                ${priceChangeBadge(l)}
+            </div>
+            ${historyHtml}
+            <a class="listing-url" href="${escHtml(l.url || '#')}" target="_blank" title="${escHtml(l.url || '')}">🔗 ${escHtml(shortUrl)}</a>
+            <div class="card-actions">
+                <button class="btn-small btn-open" onclick="window.open('${escHtml(l.url || '#')}','_blank')">Open →</button>
+                <button class="btn-small btn-delete" onclick="deleteListing('${escHtml(l.url || '')}')">🗑️ Remove</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function renderChart() {
+    const section = document.getElementById('chartSection');
+    const items = allListings().filter(l => l.priceHistory && l.priceHistory.length > 1);
+    if (items.length === 0) { section.style.display = 'none'; return; }
+    section.style.display = 'block';
+
+    if (priceChart) { priceChart.destroy(); priceChart = null; }
+
+    const colors = ['#a78bfa','#38bdf8','#34d399','#fbbf24','#f87171','#fb923c'];
+    const datasets = items.slice(0, 10).map((l, i) => ({
+        label: (l.title || 'Property').substring(0, 30),
+        data: l.priceHistory.filter(h => h.price > 0).map(h => ({ x: h.date.substring(0,10), y: h.price })),
+        borderColor: colors[i % colors.length],
+        backgroundColor: colors[i % colors.length] + '22',
+        tension: 0.3,
+        pointRadius: 4,
+    }));
+
+    priceChart = new Chart(document.getElementById('priceChart'), {
+        type: 'line',
+        data: { datasets },
+        options: {
+            responsive: true,
+            scales: {
+                x: { type: 'category', grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
+                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', callback: v => '€' + v } },
+            },
+            plugins: {
+                legend: { labels: { color: '#94a3b8', font: { size: 11 } } },
+            },
+        },
+    });
+}
+
+// ── Manual add ─────────────────────────────────────────────────────────────
+function quickAddProperty() {
+    const url   = document.getElementById('quickUrl').value.trim();
+    const price = parseFloat(document.getElementById('quickPrice').value);
+
+    if (!url) { alert('Please enter a URL'); return; }
+    if (!price || price <= 0) { alert('Please enter a valid price'); return; }
+
+    const existing = allListings().find(l => l.url === url);
+    if (existing) {
+        alert('This property is already tracked. A manual price entry will be added.');
+        existing.priceHistory.push({ price, date: new Date().toISOString() });
+        // Update in manualListings
+        const mi = manualListings.findIndex(l => l.url === url);
+        if (mi >= 0) manualListings[mi] = existing;
+        else manualListings.push(existing);
+    } else {
+        const platform = detectPlatform(url);
+        manualListings.push({
+            id: Date.now(),
+            title: platform === 'airbnb' ? 'Airbnb Property (manual)' : (platform === 'booking' ? 'Booking.com Property (manual)' : 'Property (manual)'),
+            platform,
+            location: '',
+            url,
+            priceHistory: [{ price, date: new Date().toISOString() }],
+            addedAt: new Date().toISOString(),
+        });
+    }
+
+    saveManual();
+    document.getElementById('quickUrl').value  = '';
+    document.getElementById('quickPrice').value = '';
+    render();
+}
+
+function deleteListing(url) {
+    if (!confirm('Remove this property?')) return;
+    // Remove from manual entries; scraped entries can't be deleted (re-appear next day)
+    manualListings = manualListings.filter(l => l.url !== url);
+    saveManual();
+    render();
+}
+
+function saveManual() {
+    localStorage.setItem('manualListings', JSON.stringify(manualListings));
+}
+
+function clearManual() {
+    if (!confirm('Clear all manually added properties?')) return;
+    manualListings = [];
+    saveManual();
+    render();
+}
+
+// ── Export / Import ────────────────────────────────────────────────────────
+function exportCSV() {
+    const rows = [['Title','Platform','Location','Current Price','Per Night','Within Budget','URL','Last Checked','# Data Points']];
+    allListings().forEach(l => {
+        const p = currentPrice(l);
+        rows.push([
+            `"${(l.title||'').replace(/"/g,'""')}"`,
+            l.platform || '',
+            l.location || '',
+            p > 0 ? p.toFixed(2) : '',
+            p > 0 ? (p / CFG.nights).toFixed(2) : '',
+            p > 0 ? (p <= CFG.budget ? 'YES' : 'NO') : '',
+            l.url || '',
+            l.priceHistory?.length ? l.priceHistory[l.priceHistory.length-1].date.substring(0,10) : '',
+            l.priceHistory?.length || 0,
+        ]);
+    });
+    const csv  = rows.map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = `vacation_tracker_${new Date().toISOString().substring(0,10)}.csv`;
+    a.click();
+}
+
+function exportJSON() {
+    const blob = new Blob([JSON.stringify(allListings(), null, 2)], { type: 'application/json' });
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = `vacation_tracker_${new Date().toISOString().substring(0,10)}.json`;
+    a.click();
+}
+
+function importJSON() {
+    const input = document.createElement('input');
+    input.type  = 'file';
+    input.accept = '.json';
+    input.onchange = e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+            try {
+                const data = JSON.parse(ev.target.result);
+                if (!Array.isArray(data)) { alert('Invalid JSON format'); return; }
+                manualListings = data;
+                saveManual();
+                render();
+                alert(`✅ Imported ${data.length} listings`);
+            } catch(_) { alert('Invalid JSON file'); }
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+}
+
+// ── Utility ────────────────────────────────────────────────────────────────
+function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
