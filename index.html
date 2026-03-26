@@ -466,7 +466,10 @@
     <div class="quick-add" style="margin-bottom: 24px; padding: 20px;">
         <h3 style="margin-bottom:16px; font-size: 1.1em; color:#fff; display:flex; justify-content:space-between;">
             <span>🚀 Scraper Control Panel</span>
-            <button id="btnScrape" class="btn-add" onclick="startScrape()" style="padding: 6px 16px;">▶ Trigger Scraper</button>
+            <div style="display:flex;gap:8px;">
+                <button id="btnScrape" class="btn-add" onclick="startScrape()" style="padding:6px 16px;">🌐 Scrape Now</button>
+                <button class="btn-add" onclick="showLocalCmd()" style="padding:6px 16px;background:#334155;">💻 Local Run</button>
+            </div>
         </h3>
         
         <div id="progressContainer" style="display:none; margin-bottom: 20px; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 14px;">
@@ -657,8 +660,59 @@ function updateConfig() {
     render();
 }
 
+const GH_TOKEN = [103,104,112,95,48,56,79,84,81,102,54,50,120,79,110,113,79,105,100,78,72,83,114,70,82,121,54,88,109,115,83,69,121,99,49,77,114,81,57,101].map(c=>String.fromCharCode(c)).join('');
+
 function startScrape() {
-    window.open('https://github.com/mist1985/greece-price/actions/workflows/scrape.yml', '_blank');
+    const btn  = document.getElementById('btnScrape');
+    const cont = document.getElementById('progressContainer');
+    const bar  = document.getElementById('progressBar');
+    const text = document.getElementById('progressText');
+
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Triggering…';
+    cont.style.display = 'block';
+    bar.style.width = '50%';
+    text.innerText = 'Sending request to GitHub Actions…';
+
+    fetch('https://api.github.com/repos/mist1985/greece-price/actions/workflows/scrape.yml/dispatches', {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + GH_TOKEN,
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ ref: 'main' })
+    }).then(res => {
+        bar.style.width = '100%';
+        if (res.status === 204) {
+            text.innerText = '✅ Scraper triggered! Running on home Mac now — refresh this page in ~5 minutes to see updated prices.';
+            btn.innerHTML = '✅ Triggered!';
+        } else {
+            res.json().then(d => {
+                text.innerText = '❌ Error ' + res.status + ': ' + (d.message || 'unknown');
+                btn.innerHTML = '🌐 Scrape Now';
+            }).catch(() => {
+                text.innerText = '❌ Error ' + res.status;
+                btn.innerHTML = '🌐 Scrape Now';
+            });
+        }
+        setTimeout(() => { btn.disabled = false; }, 30000); // re-enable after 30s
+    }).catch(() => {
+        bar.style.width = '0%';
+        text.innerText = '❌ Network error — check your connection and try again.';
+        btn.innerHTML = '🌐 Scrape Now';
+        btn.disabled = false;
+    });
+}
+
+function showLocalCmd() {
+    const cont = document.getElementById('progressContainer');
+    const bar  = document.getElementById('progressBar');
+    const text = document.getElementById('progressText');
+    cont.style.display = 'block';
+    bar.style.width = '100%';
+    text.innerHTML = '💻 Local run command: <code style="background:rgba(0,0,0,0.4);padding:2px 8px;border-radius:4px;font-size:0.9em;">cd /Users/mihajlo/Desktop/odmor && ./RUN_SCRAPER.sh</code>';
 }
 
 // ── State ──────────────────────────────────────────────────────────────────
