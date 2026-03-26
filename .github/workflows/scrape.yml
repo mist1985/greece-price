@@ -2,8 +2,10 @@ name: Daily Price Scraper
 
 on:
   schedule:
-    - cron: '0 7 * * *'   # 9:00 AM CET (UTC+2 in summer)
-  workflow_dispatch:        # allow manual run from GitHub UI
+    - cron: '0 7 * * *'    # 9:00 AM CET
+    - cron: '0 13 * * *'   # 3:00 PM CET
+    - cron: '0 19 * * *'   # 9:00 PM CET
+  workflow_dispatch:         # manual trigger from GitHub UI or button
 
 permissions:
   contents: write
@@ -12,24 +14,14 @@ permissions:
 
 jobs:
   scrape:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install dependencies
-        run: |
-          pip install playwright beautifulsoup4 requests lxml
-          playwright install chromium --with-deps
-
       - name: Run scraper
-        run: python daily_scraper.py
+        run: .venv/bin/python daily_scraper.py
         continue-on-error: true   # don't fail the whole job if scraping is blocked
 
       - name: Commit updated tracker_data.js

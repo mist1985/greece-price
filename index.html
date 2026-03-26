@@ -466,7 +466,7 @@
     <div class="quick-add" style="margin-bottom: 24px; padding: 20px;">
         <h3 style="margin-bottom:16px; font-size: 1.1em; color:#fff; display:flex; justify-content:space-between;">
             <span>🚀 Scraper Control Panel</span>
-            <button id="btnScrape" class="btn-add" onclick="startScrape()" style="padding: 6px 16px;">▶ Run Scraper Now</button>
+            <button id="btnScrape" class="btn-add" onclick="startScrape()" style="padding: 6px 16px;">▶ Trigger Scraper</button>
         </h3>
         
         <div id="progressContainer" style="display:none; margin-bottom: 20px; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 14px;">
@@ -518,16 +518,6 @@
             </label>
         </div>
 
-        <!-- GitHub Token for remote trigger -->
-        <div style="margin-top:14px; border-top:1px solid rgba(255,255,255,0.1); padding-top:12px;">
-            <label style="color:#94a3b8; font-size:0.82em; display:block; margin-bottom:6px;">🔑 GitHub Token <span style="color:#64748b;">(needed to trigger scraper from this page — stored only in your browser)</span></label>
-            <div style="display:flex; gap:8px;">
-                <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" style="flex:1; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:6px 10px; color:#e2e8f0; font-size:0.85em;">
-                <button onclick="saveToken()" style="background:#334155; color:#e2e8f0; border:none; border-radius:6px; padding:6px 14px; cursor:pointer; font-size:0.85em;">Save</button>
-                <button onclick="clearToken()" style="background:#450a0a; color:#fca5a5; border:none; border-radius:6px; padding:6px 14px; cursor:pointer; font-size:0.85em;">Clear</button>
-            </div>
-            <p style="color:#475569; font-size:0.75em; margin-top:5px;">Generate at <a href="https://github.com/settings/tokens/new?scopes=workflow&description=greece-price-tracker" target="_blank" style="color:#38bdf8;">github.com/settings/tokens</a> — select only the <code style="background:rgba(0,0,0,0.3); padding:1px 4px; border-radius:3px;">workflow</code> scope.</p>
-        </div>
     </div>
 
     <!-- Stats -->
@@ -668,64 +658,7 @@ function updateConfig() {
 }
 
 function startScrape() {
-    const btn = document.getElementById('btnScrape');
-    const container = document.getElementById('progressContainer');
-    const bar = document.getElementById('progressBar');
-    const text = document.getElementById('progressText');
-    container.style.display = 'block';
-
-    const token = localStorage.getItem('ghToken');
-    if (!token) {
-        alert('⚠️ No GitHub token saved.\n\nScroll down to the 🔑 GitHub Token field, paste your token and click Save — then try again.');
-        return;
-    }
-
-    btn.disabled = true;
-    btn.innerHTML = '⏳ Triggering...';
-    bar.style.width = '60%';
-    text.innerText = 'Sending trigger to GitHub Actions...';
-
-    fetch('https://api.github.com/repos/mist1985/greece-price/actions/workflows/scrape.yml/dispatches', {
-        method: 'POST',
-        headers: {
-            'Authorization': 'Bearer ' + token,
-            'Accept': 'application/vnd.github+json',
-            'X-GitHub-Api-Version': '2022-11-28',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ref: 'main' })
-    }).then(res => {
-        bar.style.width = '100%';
-        if (res.status === 204) {
-            text.innerText = '✅ GitHub Actions triggered! Scraper is running — prices will update in ~5 minutes. Refresh the page then.';
-            btn.innerHTML = '✅ Triggered!';
-        } else {
-            res.json().then(d => {
-                text.innerText = '❌ Error ' + res.status + ': ' + (d.message || 'unknown') + '. Check your token has the "workflow" scope.';
-                btn.innerHTML = '▶ Run Scraper Now';
-            });
-        }
-        btn.disabled = false;
-    }).catch(() => {
-        bar.style.width = '0%';
-        text.innerText = '❌ Network error — check your connection and try again.';
-        btn.innerHTML = '▶ Run Scraper Now';
-        btn.disabled = false;
-    });
-}
-
-function saveToken() {
-    const val = document.getElementById('ghToken').value.trim();
-    if (!val) { alert('Please enter a token first.'); return; }
-    localStorage.setItem('ghToken', val);
-    document.getElementById('ghToken').value = '';
-    document.getElementById('ghToken').placeholder = '✅ Token saved (hidden)';
-}
-
-function clearToken() {
-    localStorage.removeItem('ghToken');
-    document.getElementById('ghToken').value = '';
-    document.getElementById('ghToken').placeholder = 'ghp_xxxxxxxxxxxx';
+    window.open('https://github.com/mist1985/greece-price/actions/workflows/scrape.yml', '_blank');
 }
 
 // ── State ──────────────────────────────────────────────────────────────────
@@ -751,10 +684,6 @@ window.addEventListener('DOMContentLoaded', () => {
     } else {
         document.getElementById('lastUpdatedBadge').textContent = '⏳ Not yet scraped';
         document.getElementById('statusBanner').style.display = 'flex';
-    }
-
-    if (localStorage.getItem('ghToken')) {
-        document.getElementById('ghToken').placeholder = '✅ Token saved (hidden)';
     }
 
     render();
