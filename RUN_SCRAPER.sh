@@ -24,6 +24,6 @@ echo "╔═══════════════════════�
 echo "║                        ✅ SCRAPE DONE! ✅                         ║"
 echo "╚════════════════════════════════════════════════════════════════════╝"
 echo ""
-echo "Opening vacation_tracker.html…"
-open "${DIR}/vacation_tracker.html"
+echo "Opening index.html…"
+open "${DIR}/index.html"
 

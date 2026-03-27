@@ -24,8 +24,8 @@ def main():
     print()
 
     # Check if tracker exists
-    if not os.path.exists('vacation_tracker.html'):
-        print("❌ Error: vacation_tracker.html not found!")
+    if not os.path.exists('index.html'):
+        print("❌ Error: index.html not found!")
         return
 
     print("📝 Step 2: Opening in your browser...")
@@ -65,7 +65,7 @@ def main():
     print()
     print("⚡ Quick links:")
     print(f"   Search Links: file://{search_links_path}")
-    print(f"   Tracker: file://{os.path.abspath('vacation_tracker.html')}")
+    print(f"   Tracker: file://{os.path.abspath('index.html')}")
     print()
     print("=" * 70)
 

@@ -6,6 +6,7 @@ extracts real property links + prices, and writes tracker_data.js so that
 vacation_tracker.html shows live data without any manual work.
 """
 
+import hashlib
 import json
 import re
 import time
@@ -22,7 +23,7 @@ LOG_FILE    = BASE_DIR / "scraper.log"
 
 def generate_urls(config: Dict[str, Any]) -> List[Dict]:
     airbnb_base = "https://www.airbnb.com/s/{}/homes?checkin={}&checkout={}&adults={}&children={}&search_type=filter_change&currency=EUR&display_currency=EUR&price_filter_input_type=0&display_total_price=true"
-    booking_base = "https://www.booking.com/searchresults.html?ss={}&checkin={}&checkout={}&group_adults={}&group_children={}&no_rooms=1&selected_currency=EUR"
+    booking_base = "https://www.booking.com/searchresults.html?ss={}&checkin={}&checkout={}&group_adults={}&group_children={}&no_rooms=1&selected_currency=EUR&show_fullcard_price=1"
     
     locations = [
         "Vourvourou, Chalkidiki", "Sithonia, Chalkidiki", 
@@ -87,23 +88,38 @@ def extract_price(text: str) -> float:
     """Parse a price string (EUR, MKD, USD) → float in EUR."""
     if not text:
         return 0.0
-    
+
     text = text.replace('\xa0', '').replace(' ', '').upper()
-    
-    # Determine the currency of the entire text block
+
     conversion_rate = 1.0
     if "MKD" in text or "ДЕН" in text:
         conversion_rate = 1 / 61.5
-    elif "USD" in text or "$" in text:
+    elif "USD" in text or "US$" in text:
         conversion_rate = 1 / 1.08
 
-    # Extract all numerical tokens
-    cleaned = re.sub(r"[^\d.,]", " ", text).replace(",", "")
+    cleaned = re.sub(r"[^\d.,]", " ", text)
     nums = []
     for t in cleaned.split():
-        # Handle dot as thousands separator (e.g., 1.234)
-        if "." in t and len(t.split(".")[-1]) == 3:
-            t = t.replace(".", "")
+        if not t:
+            continue
+        if "," in t and "." in t:
+            if t.rfind(".") > t.rfind(","):
+                # 1,234.56 — comma is thousands, dot is decimal
+                t = t.replace(",", "")
+            else:
+                # 1.234,56 — dot is thousands, comma is decimal
+                t = t.replace(".", "").replace(",", ".")
+        elif "," in t:
+            parts = t.split(",")
+            if len(parts) == 2 and len(parts[-1]) == 3:
+                t = t.replace(",", "")   # thousands comma: 3,061 → 3061
+            else:
+                t = t.replace(",", ".")  # decimal comma: 3,5 → 3.5
+        elif "." in t:
+            parts = t.split(".")
+            if len(parts) == 2 and len(parts[-1]) == 3:
+                t = t.replace(".", "")   # thousands dot: 3.061 → 3061
+            # else normal decimal dot — leave as-is
         try:
             val = float(t)
             nums.append(val)
@@ -113,14 +129,9 @@ def extract_price(text: str) -> float:
     if not nums:
         return 0.0
 
-    # Apply conversion and filter out unrealistically small numbers (like ratings, # of nights)
     converted = [v * conversion_rate for v in nums if (v * conversion_rate) > 20.0]
-    
     if converted:
-        # Use the largest plausible price — when both per-night and total appear,
-        # the total is always the bigger number.
         return max(converted)
-        
     return 0.0
 
 
@@ -277,23 +288,32 @@ def scrape_airbnb(search: Dict, budget: int, checkin: str, checkout: str) -> Lis
                     if price == 0:
                         try:
                             full_text = card.inner_text()
-                            m = re.search(r'([\d][,.\d]*)\s*(?:total)', full_text, re.IGNORECASE)
+                            m = re.search(
+                                r'([\d]{1,3}(?:[.,][\d]{3})*)\s*(?:total)',
+                                full_text, re.IGNORECASE
+                            )
                             if m:
-                                price = extract_price(m.group(1))
+                                candidate = extract_price(m.group(1))
+                                if candidate > price:
+                                    price = candidate
                         except Exception:
                             pass
 
                     # If the extracted value is implausibly low for a total stay price,
-                    # treat it as per-night and multiply. Threshold: €60/night min.
+                    # treat it as per-night and multiply. Threshold: €150/night min.
                     nights = (
                         datetime.strptime(checkout, "%Y-%m-%d")
                         - datetime.strptime(checkin, "%Y-%m-%d")
                     ).days
-                    if 0 < price < nights * 60:
+                    if 0 < price < nights * 150:
+                        log(f"    ℹ️  Per-night heuristic applied: €{price:.0f}/night → €{price*nights:.0f} total")
                         price = price * nights
+                    if price > nights * 1500:
+                        log(f"    ⚠️  Price €{price:.0f} exceeds sanity cap, discarding")
+                        price = 0.0
 
                     listings.append({
-                        "id": abs(hash(canonical_url)) % 1_000_000,
+                        "id": int(hashlib.md5(canonical_url.encode()).hexdigest(), 16) % 1_000_000,
                         "title": title,
                         "platform": "airbnb",
                         "location": location,
@@ -417,17 +437,19 @@ def scrape_booking(search: Dict, budget: int, checkin: str, checkout: str) -> Li
                     # Price
                     price = 0.0
                     for psel in [
+                        '[data-testid="prco-total-price"]',
                         '[data-testid="price-and-discounted-price"]',
-                        "span[data-testid=\"price-and-discounted-price\"]",
-                        "div.prco-valign-middle-helper",
-                        "[data-testid=\"taxes-and-fees\"]",
+                        '[data-testid="prco-inline-available-price"]',
+                        '.bui-price-display__value',
+                        'div.prco-valign-middle-helper',
                     ]:
                         try:
-                            el = card.locator(psel).first
+                            # Use .last to get the deepest/discounted price span, not outer wrapper
+                            el = card.locator(psel).last
                             if el.count():
-                                price = extract_price(el.inner_text())
-                                if price > 0:
-                                    break
+                                candidate = extract_price(el.inner_text())
+                                if candidate > price:
+                                    price = candidate
                         except Exception:
                             continue
 
@@ -436,11 +458,15 @@ def scrape_booking(search: Dict, budget: int, checkin: str, checkout: str) -> Li
                         datetime.strptime(checkout, "%Y-%m-%d")
                         - datetime.strptime(checkin, "%Y-%m-%d")
                     ).days
-                    if 0 < price < nights * 60:
+                    if 0 < price < nights * 150:
+                        log(f"    ℹ️  Per-night heuristic applied: €{price:.0f}/night → €{price*nights:.0f} total")
                         price = price * nights
+                    if price > nights * 1500:
+                        log(f"    ⚠️  Price €{price:.0f} exceeds sanity cap, discarding")
+                        price = 0.0
 
                     listings.append({
-                        "id": abs(hash(canonical_url)) % 1_000_000,
+                        "id": int(hashlib.md5(canonical_url.encode()).hexdigest(), 16) % 1_000_000,
                         "title": title,
                         "platform": "booking",
                         "location": location,
@@ -463,27 +489,50 @@ def merge_listings(existing: List[Dict], fresh: List[Dict]) -> List[Dict]:
     """
     Merge fresh scrape results into existing data.
     - New listings are added.
-    - Existing listings get a new price-history entry appended.
-    - Any listing that wasn't seen in the fresh batch retains its last entry.
+    - Existing listings get a new price-history entry appended (once per day).
+    - Any listing not seen in the fresh batch retains its last entry.
     """
-    def get_base(u: str) -> str:
-        return u.split("?")[0]
+    import re as _re
 
-    by_url: Dict[str, Dict] = {get_base(item["url"]): item for item in existing}
+    def normalise_url(u: str) -> str:
+        """Strip query string and Booking.com locale suffixes for stable keying."""
+        base = u.split("?")[0]
+        # Booking.com: /hotel/gr/name.en-gb.html → /hotel/gr/name.html
+        base = _re.sub(r'\.[a-z]{2}(?:-[a-z]{2})?\.html$', '.html', base)
+        return base
+
+    by_url: Dict[str, Dict] = {normalise_url(item["url"]): item for item in existing}
 
     for item in fresh:
-        base = get_base(item["url"])
-        if base in by_url:
-            # Append new price point (if price > 0)
+        key = normalise_url(item["url"])
+        # Recompute ID using stable hashlib (not Python's randomised hash())
+        stable_id = int(hashlib.md5(key.encode()).hexdigest(), 16) % 1_000_000
+        item["id"] = stable_id
+
+        if key in by_url:
             new_price = item["priceHistory"][0]["price"] if item["priceHistory"] else 0
             if new_price > 0:
-                by_url[base]["priceHistory"].append(item["priceHistory"][0])
-            # Save the latest working URL
-            by_url[base]["url"] = item["url"]
+                today = item["priceHistory"][0]["date"][:10]
+                existing_dates = {e["date"][:10] for e in by_url[key]["priceHistory"]}
+                if today not in existing_dates:
+                    # New day — append new price point
+                    by_url[key]["priceHistory"].append(item["priceHistory"][0])
+                else:
+                    # Same day re-run — overwrite today's entry with latest price
+                    for e in by_url[key]["priceHistory"]:
+                        if e["date"][:10] == today:
+                            e["price"] = new_price
+                            e["date"] = item["priceHistory"][0]["date"]
+                            break
+            by_url[key]["url"] = item["url"]
+            by_url[key]["id"] = stable_id
         else:
-            by_url[base] = item
+            by_url[key] = item
 
-    return list(by_url.values())
+    result = list(by_url.values())
+    for item in result:
+        item["priceHistory"].sort(key=lambda e: e["date"])
+    return result
 
 
 def main():
