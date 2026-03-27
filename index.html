@@ -786,7 +786,7 @@ function hasPriceDrop(l) {
     if (!l.priceHistory || l.priceHistory.length < 2) return false;
     const prices = l.priceHistory.map(p => p.price).filter(p => p > 0);
     if (prices.length < 2) return false;
-    return prices[prices.length - 1] < prices[prices.length - 2];
+    return prices[prices.length - 1] > prices[prices.length - 2];
 }
 
 function priceChangeBadge(l) {
@@ -796,8 +796,8 @@ function priceChangeBadge(l) {
     const prev = prices[prices.length - 2];
     const curr = prices[prices.length - 1];
     const diff = curr - prev;
-    if (diff < 0) return `<span class="price-change-badge price-down">▼ €${Math.abs(diff).toFixed(0)}</span>`;
     if (diff > 0) return `<span class="price-change-badge price-up">▲ €${diff.toFixed(0)}</span>`;
+    if (diff < 0) return `<span class="price-change-badge price-down">▼ €${Math.abs(diff).toFixed(0)}</span>`;
     return '';
 }
 
