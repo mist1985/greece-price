@@ -10,7 +10,6 @@ import hashlib
 import json
 import re
 import time
-import sys
 from datetime import datetime
 from pathlib import Path
 from typing import List, Dict, Any
@@ -161,7 +160,7 @@ window.__LAST_UPDATED__ = "{last_updated}";
     log(f"✅ Wrote {len(listings)} listings to tracker_data.js")
 
 
-def scrape_airbnb(search: Dict, budget: int, checkin: str, checkout: str) -> List[Dict]:
+def scrape_airbnb(search: Dict, checkin: str, checkout: str) -> List[Dict]:
     """Scrape an Airbnb search results page and return listing dicts."""
     from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
 
@@ -305,12 +304,9 @@ def scrape_airbnb(search: Dict, budget: int, checkin: str, checkout: str) -> Lis
                         datetime.strptime(checkout, "%Y-%m-%d")
                         - datetime.strptime(checkin, "%Y-%m-%d")
                     ).days
-                    if 0 < price < nights * 150:
+                    if 0 < price < nights * 60:
                         log(f"    ℹ️  Per-night heuristic applied: €{price:.0f}/night → €{price*nights:.0f} total")
                         price = price * nights
-                    if price > nights * 1500:
-                        log(f"    ⚠️  Price €{price:.0f} exceeds sanity cap, discarding")
-                        price = 0.0
 
                     listings.append({
                         "id": int(hashlib.md5(canonical_url.encode()).hexdigest(), 16) % 1_000_000,
@@ -332,7 +328,7 @@ def scrape_airbnb(search: Dict, budget: int, checkin: str, checkout: str) -> Lis
     return listings
 
 
-def scrape_booking(search: Dict, budget: int, checkin: str, checkout: str) -> List[Dict]:
+def scrape_booking(search: Dict, checkin: str, checkout: str) -> List[Dict]:
     """Scrape a Booking.com search results page and return listing dicts."""
     from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
 
@@ -458,12 +454,9 @@ def scrape_booking(search: Dict, budget: int, checkin: str, checkout: str) -> Li
                         datetime.strptime(checkout, "%Y-%m-%d")
                         - datetime.strptime(checkin, "%Y-%m-%d")
                     ).days
-                    if 0 < price < nights * 150:
+                    if 0 < price < nights * 60:
                         log(f"    ℹ️  Per-night heuristic applied: €{price:.0f}/night → €{price*nights:.0f} total")
                         price = price * nights
-                    if price > nights * 1500:
-                        log(f"    ⚠️  Price €{price:.0f} exceeds sanity cap, discarding")
-                        price = 0.0
 
                     listings.append({
                         "id": int(hashlib.md5(canonical_url.encode()).hexdigest(), 16) % 1_000_000,
@@ -542,7 +535,6 @@ def main():
     log("[PROGRESS] 0% - Starting Engine")
 
     config = load_config()
-    budget: int = config.get("budget", 1500)
     checkin: str = config.get("checkin", "2026-06-25")
     checkout: str = config.get("checkout", "2026-07-05")
     
@@ -560,9 +552,9 @@ def main():
         log(f"[PROGRESS] {pct}% - Scraping {search['platform'].title()} {search['location']}")
         try:
             if search["platform"] == "airbnb":
-                results = scrape_airbnb(search, budget, checkin, checkout)
+                results = scrape_airbnb(search, checkin, checkout)
             else:
-                results = scrape_booking(search, budget, checkin, checkout)
+                results = scrape_booking(search, checkin, checkout)
             fresh.extend(results)
             time.sleep(3)   # polite pause between searches
         except Exception as ex:
