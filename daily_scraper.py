@@ -177,7 +177,9 @@ def scrape_airbnb(search: Dict, budget: int, checkin: str, checkout: str) -> Lis
                     "Chrome/122.0.0.0 Safari/537.36"
                 ),
                 locale="en-GB",
-                timezone_id="Europe/Athens"
+                timezone_id="Europe/Skopje",
+                geolocation={"latitude": 41.9981, "longitude": 21.4254},
+                permissions=["geolocation"],
             )
             ctx.set_default_timeout(60_000)
             page = ctx.new_page()
@@ -250,12 +252,14 @@ def scrape_airbnb(search: Dict, budget: int, checkin: str, checkout: str) -> Lis
                         except Exception:
                             continue
 
-                    # Price (total for stay)
+                    # Price (total for stay) — scan ALL selectors and take the max,
+                    # so the total price (large) beats per-night (small) even if
+                    # per-night is found first.
                     price = 0.0
                     for psel in [
+                        '[data-testid="price-availability-row"]',
                         "span._tyxjp1",
                         "span._1y74zjx",
-                        '[data-testid="price-availability-row"]',
                         "div._1jo4hgw",
                         "span.a8jt5op",
                         "div._wmq1k2",
@@ -263,11 +267,21 @@ def scrape_airbnb(search: Dict, budget: int, checkin: str, checkout: str) -> Lis
                         try:
                             el = card.locator(psel).first
                             if el.count():
-                                price = extract_price(el.inner_text())
-                                if price > 0:
-                                    break
+                                candidate = extract_price(el.inner_text())
+                                if candidate > price:
+                                    price = candidate
                         except Exception:
                             continue
+
+                    # Fallback: search full card text for "NUMBER total" pattern
+                    if price == 0:
+                        try:
+                            full_text = card.inner_text()
+                            m = re.search(r'([\d][,.\d]*)\s*(?:total)', full_text, re.IGNORECASE)
+                            if m:
+                                price = extract_price(m.group(1))
+                        except Exception:
+                            pass
 
                     # If the extracted value is implausibly low for a total stay price,
                     # treat it as per-night and multiply. Threshold: €60/night min.
@@ -325,7 +339,9 @@ def scrape_booking(search: Dict, budget: int, checkin: str, checkout: str) -> Li
                     "Chrome/122.0.0.0 Safari/537.36"
                 ),
                 locale="en-GB",
-                timezone_id="Europe/Athens"
+                timezone_id="Europe/Skopje",
+                geolocation={"latitude": 41.9981, "longitude": 21.4254},
+                permissions=["geolocation"],
             )
             ctx.set_default_timeout(60_000)
             page = ctx.new_page()
